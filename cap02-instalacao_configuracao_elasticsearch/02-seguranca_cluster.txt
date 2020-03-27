@@ -1,0 +1,60 @@
+# Passo 1 - Gerando o CA
+./bin/elasticsearch-certutil ca --out /opt/elastic/elasticsearch-7.5.1/config/certs/ca.p12 --pass elasticstack
+
+# Passo 2 - Gerando os certificados dos nodes(gerar para cada node do cluster)
+./bin/elasticsearch-certutil cert --ca /opt/elastic/elasticsearch-7.5.1/config/certs/ca.p12 --ca-pass elasticstack --name node-all --out /opt/elastic/certs/master-1.p12 --pass elasticstack
+
+# Passo 3 - Adicionar a senha do certificado no keystore (adicionar para cada node do cluster)
+
+./bin/elasticsearch-keystore add xpack.security.transport.ssl.keystore.secure_password
+./bin/elasticsearch-keystore add xpack.security.transport.ssl.truststore.secure_password
+./bin/elasticsearch-keystore add xpack.security.http.ssl.keystore.secure_password
+./bin/elasticsearch-keystore add xpack.security.http.ssl.truststore.secure_password
+
+# Passo 4 - Verificando as entradas no keystore
+./bin/elasticsearch-keystore list
+
+# Passo 5 - Habilitando a segurança e configurando o certificado no elasticsearch.yml (configurar cada node do cluster) 
+
+vi /opt/elastic/elasticsearch-7.5.1/config/elasticsearch.yml
+
+xpack.security.enabled: true
+xpack.security.transport.ssl.enabled: true
+xpack.security.transport.ssl.verification_mode: certificate
+xpack.security.transport.ssl.keystore.path: certs/node-all.p12
+xpack.security.transport.ssl.truststore.path: certs/node-all.p12
+
+xpack.security.http.ssl.enabled: true
+xpack.security.http.ssl.keystore.path: certs/node-all.p12
+xpack.security.http.ssl.truststore.path: certs/node-all.p12
+
+# Passo 6 - Reiniciar o Elasticsearch para aplicar as novas configurações
+
+cd /opt/elastic/elasticsearch-7.5.1
+pkill -F pid
+./bin/elasticsearch -d -p pid 
+
+tail -f /elasticstack/es/logs/meu_cluster.log
+
+# Passo 7 - Definindo a senha para os usuários built-in do Elasticsearch
+
+./bin/elasticsearch-setup-passwords interactive
+
+OBS defina a senha "123456" para todos os usuários
+
+# Passo 8 - Testando o acesso ao elasticsearch com o curl
+
+curl -k -u elastic:123456 -X GET https://localhost:9200 
+
+# Passo 9 - Ajustar o kibana com as novas configurações 
+
+vi /opt/elastic/kibana-7.5.1-linux-x86_64/config/kibana.yml 
+
+elasticsearch.hosts: ["https://localhost:9200"]
+elasticsearch.username: "kibana"
+elasticsearch.password: "123456"
+elasticsearch.ssl.verificationMode: none 
+
+## OBS o ultimo paramentro é para ignorar certificado auto-assinado
+
+# Passo 10 - Abra o navegador e acesse o kibana e logue com o usuário elastic e a senha 123456 

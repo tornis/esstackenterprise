@@ -1,0 +1,204 @@
+# Passo 1 - Criar usuário elastic no SO
+useradd -d /opt/elastic -m elastic
+
+# Passo 2 - Descompactar o Elasticsearch e Kibana
+cd /elasticstack
+tar zxfv elasticsearch-7.5.1-linux-x86_64.tar.gz
+tar zxfv kibana-7.5.1-linux-x86_64.tar.gz
+mv elasticsearch-7.5.1 /opt/elastic/
+mv kibana-7.5.1-linux-x86_64 /opt/elastic/
+mkdir -p /elasticstack/es/data
+mkdir -p /elasticstack/es/logs
+chown elastic.elastic /opt/elastic /elasticstack/es -R 
+
+# Passo 3 - Configurando o S.O files descriptors para o usuário elastic 
+echo "elastic    -    nofile    65536" >> /etc/security/limits.conf
+
+# Passo 4 - Configurando a memoria para o ES 
+vi /etc/sysctl.conf 
+
+vm.swappiness = 10
+vm.max_map_count = 262144
+
+ou 
+
+echo "vm.swappiness = 1" >> /etc/sysctl.conf
+echo "vm.max_map_count = 262144" >> /etc/sysctl.conf
+swapoff -a
+sysctl -p 
+
+# Passo 5 - Ajustando o postfix para recebimento do email 
+
+vi /etc/postfix/main.cf 
+
+inet_interfaces = 127.0.0.1
+systemctl restart postfix
+
+netstat -lntp 
+
+Proto Recv-Q Send-Q Endereço Local          Endereço Remoto         Estado      PID/Program name    
+tcp        0      0 127.0.0.1:25            0.0.0.0:*               OUÇA       2828/master         
+
+# Passo 6 - Habilitando regras de firewall para comunicação entre os nós e os clientes com o Cluster Elastic
+firewall-cmd --permanent --add-port=9200/tcp
+firewall-cmd --permanent --add-port=9200/tcp
+firewall-cmd --permanent --add-port=5601/tcp
+firewall-cmd --reload
+
+# Passo 7 - Configurando a JVM ajuste para 1GB
+
+vi /opt/elastic/elasticsearch-7.5.1/conf/jvm.options
+
+-Xms1g
+-Xmx1g
+
+# Passo 8 - Configuando o Elasticsearch 
+vi /opt/elastic/elasticsearch-7.6.0/conf/elasticsaerch.yml
+
+cluster.name: meu_cluster
+node.name: master
+path.data: /elasticstack/es/data
+path.logs: /elasticstack/es/logs
+network.host: 0.0.0.0
+http.port: 9200
+discovery.seed_hosts: ["10.10.10.10"]
+cluster.initial_master_nodes: ["10.10.10.10"]
+node.attr.zone: 1
+node.attr.type: hot
+
+# Passo 9 - Iniciando a instancia do Elasticsearch Master
+
+su - elastic
+
+cd /opt/elastic/elasticsearch-7.5.1
+./bin/elasticsearch --help 
+
+OpenJDK 64-Bit Server VM warning: Option UseConcMarkSweepGC was deprecated in version 9.0 and will likely be removed in a future release.
+Starts Elasticsearch
+
+Option                Description                                               
+------                -----------                                               
+-E <KeyValuePair>     Configure a setting                                       
+-V, --version         Prints Elasticsearch version information and exits        
+-d, --daemonize       Starts Elasticsearch in the background                    
+-h, --help            Show help                                                 
+-p, --pidfile <Path>  Creates a pid file in the specified path on start         
+-q, --quiet           Turns off standard output/error streams logging in console
+-s, --silent          Show minimal output                                       
+-v, --verbose         Show verbose output
+
+
+./bin/elasticsearch -d -p pid  
+
+# Passo 10 - Analisando os logs do Elasticsearch 
+
+tail -f /opt/elastic/elasticsearch-7.6.0/logs/tornis.log 
+
+[2020-02-25T11:08:04,544][INFO ][o.e.n.Node               ] [master] starting ...
+[2020-02-25T11:08:04,729][INFO ][o.e.t.TransportService   ] [master] publish_address {10.10.10.100:9300}, bound_addresses {0.0.0.0:9300}
+[2020-02-25T11:08:04,986][INFO ][o.e.b.BootstrapChecks    ] [master] bound or publishing to a non-loopback address, enforcing bootstrap checks
+[2020-02-25T11:08:05,010][INFO ][o.e.c.c.Coordinator      ] [master] cluster UUID [7i1vOWbaSWq5JhZwoaQdVg]
+[2020-02-25T11:08:05,298][INFO ][o.e.c.s.MasterService    ] [master] elected-as-master ([1] nodes joined)[{master}{PTT7BPhoRnCH5J3ts9Jf1g}{adOK9Bt6TUimzpOJuWI6uA}{10.10.10.100}{10.10.10.100:9300}{dilm}{ml.machine_memory=3874480128, box_type=warm, xpack.installed=true, zone=site1, ml.max_open_jobs=20} elect leader, _BECOME_MASTER_TASK_, _FINISH_ELECTION_], term: 2, version: 20, delta: master node changed {previous [], current [{master}{PTT7BPhoRnCH5J3ts9Jf1g}{adOK9Bt6TUimzpOJuWI6uA}{10.10.10.100}{10.10.10.100:9300}{dilm}{ml.machine_memory=3874480128, box_type=warm, xpack.installed=true, zone=site1, ml.max_open_jobs=20}]}
+[2020-02-25T11:08:05,402][INFO ][o.e.c.s.ClusterApplierService] [master] master node changed {previous [], current [{master}{PTT7BPhoRnCH5J3ts9Jf1g}{adOK9Bt6TUimzpOJuWI6uA}{10.10.10.100}{10.10.10.100:9300}{dilm}{ml.machine_memory=3874480128, box_type=warm, xpack.installed=true, zone=site1, ml.max_open_jobs=20}]}, term: 2, version: 20, reason: Publication{term=2, version=20}
+[2020-02-25T11:08:05,472][INFO ][o.e.h.AbstractHttpServerTransport] [master] publish_address {10.10.10.100:9200}, bound_addresses {0.0.0.0:9200}
+[2020-02-25T11:08:05,473][INFO ][o.e.n.Node               ] [master] started
+[2020-02-25T11:08:05,650][INFO ][o.e.l.LicenseService     ] [master] license [b63d1e3e-aacd-4ef3-8dfd-2ec79993a80d] mode [basic] - valid
+[2020-02-25T11:08:05,651][INFO ][o.e.x.s.s.SecurityStatusChangeListener] [master] Active license is now [BASIC]; Security is disabled
+[2020-02-25T11:08:05,660][INFO ][o.e.g.GatewayService     ] [master] recovered [0] indices into cluster_state
+
+# Passo 11 - Parando o Elastisearch 
+cat /opt/elastic/elasticsearch-7.5.1/pid | xargs kill -SIGTERM
+ou
+pkill -F /opt/elastic/elasticsearch-7.5.1/pid
+
+# Passo 12 - Configuração dos data nodes (Data Node 1)
+
+Clonar o master criando 1 data-node
+
+Configurar o hostname e ip da placa interna com comando "nmtui" com:
+
+IP: 10.10.10.20/8
+hostname: esdata2.tornis.com.br
+
+Habilitar regras de firewall as regras de firewall descritas no "passo 6"
+
+# Passo 13 - Configurar o Elasticsearch como data-node 
+vi /opt/elastic/elasticsearch-7.5.1/conf/elasticsaerch.yml
+
+cluster.name: meu_cluster
+node.name: data1
+path.data: /elasticstack/es/data
+path.logs: /elasticstack/es/logs
+network.host: 0.0.0.0
+http.port: 9200
+discovery.seed_hosts: ["10.10.10.10","10.10.10.20"]
+cluster.initial_master_nodes: ["10.10.10.10","10.10.10.20"]
+node.attr.zone: 1
+node.attr.type: hot
+
+# Passo 14 - Remover os arquivos da pasta data e logs do elasticsearch (quando clonado a VM do Master)
+
+rm -fr /elasticstack/es/data/* 
+rm -fr /elasticstack/es/logs* 
+
+# Passo 15 - Iniciar o Elasticsearch do data-node
+
+su - elastic
+cd /opt/elastic/elasticsearch-7.6.0
+./bin/elasticsearch -d -p pid
+
+# Passo 16 - Verificando se o data node foi adicionado ao cluster
+
+[2020-02-25T18:00:12,592][INFO ][o.e.c.s.ClusterApplierService] [data1] master node changed {previous [], current [{master}{PTT7BPhoRnCH5J3ts9Jf1g}{46fezr0KTrutClmSKtWaww}{10.10.10.100}{10.10.10.100:9300}{dilm}{ml.machine_memory=1531453440, ml.max_open_jobs=20, box_type=warm, xpack.installed=true, zone=site1}]}, added {{master}{PTT7BPhoRnCH5J3ts9Jf1g}{46fezr0KTrutClmSKtWaww}{10.10.10.100}{10.10.10.100:9300}{dilm}{ml.machine_memory=1531453440, ml.max_open_jobs=20, box_type=warm, xpack.installed=true, zone=site1}}, term: 4, version: 29, reason: ApplyCommitRequest{term=4, version=29, sourceNode={master}{PTT7BPhoRnCH5J3ts9Jf1g}{46fezr0KTrutClmSKtWaww}{10.10.10.100}{10.10.10.100:9300}{dilm}{ml.machine_memory=1531453440, ml.max_open_jobs=20, box_type=warm, xpack.installed=true, zone=site1}}
+[2020-02-25T18:00:12,825][INFO ][o.e.x.s.a.TokenService   ] [data1] refresh keys
+[2020-02-25T18:00:13,016][INFO ][o.e.x.s.a.TokenService   ] [data1] refreshed keys
+[2020-02-25T18:00:13,064][INFO ][o.e.l.LicenseService     ] [data1] license [b63d1e3e-aacd-4ef3-8dfd-2ec79993a80d] mode [basic] - valid
+[2020-02-25T18:00:13,067][INFO ][o.e.x.s.s.SecurityStatusChangeListener] [data1] Active license is now [BASIC]; Security is disabled
+[2020-02-25T18:00:13,329][INFO ][o.e.c.s.ClusterApplierService] [data1] master node changed {previous [{master}{PTT7BPhoRnCH5J3ts9Jf1g}{46fezr0KTrutClmSKtWaww}{10.10.10.100}{10.10.10.100:9300}{dilm}{ml.machine_memory=1531453440, ml.max_open_jobs=20, box_type=warm, xpack.installed=true, zone=site1}], current []}, term: 4, version: 29, reason: becoming candidate: joinLeaderInTerm
+[2020-02-25T18:00:13,441][INFO ][o.e.c.s.ClusterApplierService] [data1] master node changed {previous [], current [{master}{PTT7BPhoRnCH5J3ts9Jf1g}{46fezr0KTrutClmSKtWaww}{10.10.10.100}{10.10.10.100:9300}{dilm}{ml.machine_memory=1531453440, ml.max_open_jobs=20, box_type=warm, xpack.installed=true, zone=site1}]}, term: 7, version: 30, reason: ApplyCommitRequest{term=7, version=30, sourceNode={master}{PTT7BPhoRnCH5J3ts9Jf1g}{46fezr0KTrutClmSKtWaww}{10.10.10.100}{10.10.10.100:9300}{dilm}{ml.machine_memory=1531453440, ml.max_open_jobs=20, box_type=warm, xpack.installed=true, zone=site1}}
+
+# Passo 17 - Configuração dos data nodes (Data Node 1)
+
+Clonar o data node 2
+
+Configurar o hostname e ip da placa interna com comando "nmtui"
+IP: 10.10.10.30/8
+hostname: esdata2.tornis.com.br
+
+Habilitar regras de firewall as regras de firewall descritas no "passo 6"
+
+# Passo 16 - Configurar o Elasticsearch como data-node 
+vi /opt/elastic/elasticsearch-7.5.1/conf/elasticsaerch.yml
+
+cluster.name: meu_cluster
+node.name: data2
+path.data: /elasticstack/es/data
+path.logs: /elasticstack/es/logs
+network.host: 0.0.0.0
+http.port: 9200
+discovery.seed_hosts: ["10.10.10.10","10.10.10.20"]
+cluster.initial_master_nodes: ["10.10.10.10","10.10.10.20"]
+node.attr.zone: 2
+node.attr.type: warm
+node.master: false
+
+# Passo 15 - Remover os arquivos da pasta data e logs do elasticsearch (quando clonado a VM do Master)
+
+rm -fr /elasticstack/es/data/* 
+rm -fr /elasticstack/es/logs* 
+
+# Passo 16 - Iniciar o Elasticsearch do data-node
+
+su - elastic
+cd /opt/elastic/elasticsearch-7.6.0
+./bin/elasticsearch -d -p pid
+
+# Passo 17 - Verificando se o data node foi adicionado ao cluster
+
+[2020-02-25T18:00:12,592][INFO ][o.e.c.s.ClusterApplierService] [data2] master node changed {previous [], current [{master}{PTT7BPhoRnCH5J3ts9Jf1g}{46fezr0KTrutClmSKtWaww}{10.10.10.10}{10.10.10.10:9300}{dilm}{ml.machine_memory=1531453440, ml.max_open_jobs=20, box_type=warm, xpack.installed=true, zone=site1}]}, added {{master}{PTT7BPhoRnCH5J3ts9Jf1g}{46fezr0KTrutClmSKtWaww}{10.10.10.10}{10.10.10.10:9300}{dilm}{ml.machine_memory=1531453440, ml.max_open_jobs=20, box_type=warm, xpack.installed=true, zone=site1}}, term: 4, version: 29, reason: ApplyCommitRequest{term=4, version=29, sourceNode={master}{PTT7BPhoRnCH5J3ts9Jf1g}{46fezr0KTrutClmSKtWaww}{10.10.10.100}{10.10.10.100:9300}{dilm}{ml.machine_memory=1531453440, ml.max_open_jobs=20, type=warm, xpack.installed=true, zone=2}}
+[2020-02-25T18:00:12,825][INFO ][o.e.x.s.a.TokenService   ] [data2] refresh keys
+[2020-02-25T18:00:13,016][INFO ][o.e.x.s.a.TokenService   ] [data2] refreshed keys
+[2020-02-25T18:00:13,064][INFO ][o.e.l.LicenseService     ] [data2] license [b63d1e3e-aacd-4ef3-8dfd-2ec79993a80d] mode [basic] - valid
+[2020-02-25T18:00:13,067][INFO ][o.e.x.s.s.SecurityStatusChangeListener] [data2] Active license is now [BASIC]; Security is disabled
+[2020-02-25T18:00:13,329][INFO ][o.e.c.s.ClusterApplierService] [data2] master node changed {previous [{master}{PTT7BPhoRnCH5J3ts9Jf1g}{46fezr0KTrutClmSKtWaww}{10.10.10.10}{10.10.10.10:9300}{dilm}{ml.machine_memory=1531453440, ml.max_open_jobs=20, type=warm, xpack.installed=true, zone=2}], current []}, term: 4, version: 29, reason: becoming candidate: joinLeaderInTerm
+[2020-02-25T18:00:13,441][INFO ][o.e.c.s.ClusterApplierService] [data2] master node changed {previous [], current [{master}{PTT7BPhoRnCH5J3ts9Jf1g}{46fezr0KTrutClmSKtWaww}{10.10.10.10}{10.10.10.10:9300}{dilm}{ml.machine_memory=1531453440, ml.max_open_jobs=20, type=warm, xpack.installed=true, zone=2}]}, term: 7, version: 30, reason: ApplyCommitRequest{term=7, version=30, sourceNode={master}{PTT7BPhoRnCH5J3ts9Jf1g}{46fezr0KTrutClmSKtWaww}{10.10.10.10}{10.10.10.10:9300}{dilm}{ml.machine_memory=1531453440, ml.max_open_jobs=20, type=warm, xpack.installed=true, zone=1}}

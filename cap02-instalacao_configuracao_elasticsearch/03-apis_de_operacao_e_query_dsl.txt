@@ -1,0 +1,260 @@
+# API de Operações Básicas, Query DSL e Agregações
+
+# Criando um Indice  
+PUT /meu_indice
+{
+    "settings" : {
+        "number_of_shards" : 1,
+        "number_of_replicas": 1
+    },
+    "mappings" : {
+        "properties" : {
+            "nome" : { 
+            	"type" : "keyword", 
+            	"fields": {
+            		"searcheable": { "type": "text"}
+            	}
+            },
+            "nascimento" : { 
+            	"type" : "date",
+            	"format": "dd/MM/yy" 
+            },
+            "profissao" : { 
+            	"type" : "keyword",
+            	"fields": {
+            		"searcheable": { "type": "text"}
+            	} 
+        	},
+        	"idade": {
+        		"type": "integer"
+        	}
+        }
+    }
+}
+
+
+
+# Criando um documento
+PUT /meu_indice/_doc/1
+{
+  "nome:":"Rodrigo Tornis",
+  "nascimento":"07/01/80",
+  "profissao":"Especialista Elastic Stack",
+  "idade": 40
+}
+
+# Alterando um documento
+PUT /meu_indice/_doc/1
+{
+  "nome:":"Fulano de Beltrano",
+  "nascimento":"25/10/90",
+  "profissao":"Especialista Big Data",
+  "idade": 40
+}
+
+#Usando a API de Update 
+PUT meu_indice/_doc/1
+{
+    "idade" : 25
+}
+
+# Alterando baseado em consulta - update_by_query 
+POST meu_indice/_update/1
+{
+    "script" : {
+        "source": "ctx._source.idade += params.count",
+        "lang": "painless",
+        "params" : {
+            "count" : 20
+        }
+    }
+}
+
+
+# Buscando/Consultando documentos
+GET /meu_indice/_search?q=nome:Fulano de Beltrano
+
+GET /meu_indice/_search
+{
+  "query": {
+    "query_string": {
+      "default_field": "nome:",
+      "query": "fulano"
+    }
+  }
+}
+
+GET /meu_indice/_search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+GET /meu_indice/_doc/1
+
+
+# Fazendo multiplas consultas com multi get
+GET /_mget
+{
+    "docs" : [
+        {
+            "_index" : "meu_indice",
+            "_id" : "1"
+        },
+        {
+            "_index" : "meu_indice",
+            "_id" : "2"
+        }
+    ]
+}
+
+
+
+# Deletando um documento 
+DELETE /meu_indice/_doc/1
+
+# Deletando por um critério - _delete_by_query
+
+POST meu_indice/_delete_by_query?conflicts=proceed
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+POST meu_indice/_delete_by_query
+{
+  "query": {
+    "range" : {
+        "idade" : {
+           "gte" : 10
+        }
+    }
+  }
+}
+
+
+# Opearações de Bulk (index,update,delete e create) 
+
+POST _bulk
+{ "index" : { "_index" : "meu_indice", "_id" : "2" } }
+{ "nome" : "Fulano de Ciclano", "nascimento" : "25/10/90","profissao":"Especialista Elastic Stack","idade": 40}
+{ "index" : { "_index" : "meu_indice", "_id" : "3" } }
+{ "nome" : "Beltrano de Ciclano", "nascimento" : "03/11/90","profissao":"Especialista Elastic Stack","idade": 40}
+{ "index" : { "_index" : "meu_indice", "_id" : "4" } }
+{ "nome" : "Ciclano da Cunha", "nascimento" : "26/12/84","profissao":"Especialista Elastic Stack","idade": 40}
+{ "index" : { "_index" : "meu_indice", "_id" : "5" } }
+{ "nome" : "Fulano de Ciclano", "nascimento" : "17/09/20","profissao":"Especialista Elastic Stack","idade": 40}
+
+# Bulk usando o comando CURL
+
+
+# Outras operações com API bulk
+POST _bulk
+{ "delete" : { "_index" : "meu_indice", "_id" : "2" } }
+{ "create" : { "_index" : "meu_indice", "_id" : "3" } }
+{ "salario" : "1000.00" }
+{ "update" : {"_id" : "4", "_index" : "meu_indice"} }
+{ "doc" : {"idade" : "50"} }
+
+
+
+
+
+
+# AGREGAÇÕES - Agrupe por faixa etária, sexo e calcule a media do saldo 
+GET /banco/_search
+{
+  "size": 0,
+  "aggs": {
+    "group_by_age": {
+      "range": {
+        "field": "age",
+        "ranges": [
+          {
+            "from": 20,
+            "to": 30
+          },
+          {
+            "from": 30,
+            "to": 40
+          },
+          {
+            "from": 40,
+            "to": 50
+          }
+        ]
+      },
+      "aggs": {
+        "group_by_gender": {
+          "terms": {
+            "field": "gender.keyword"
+          },
+          "aggs": {
+            "average_balance": {
+              "avg": {
+                "field": "balance"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+# Calcule a média saldo agrupada pelo sexo 
+GET /banco/_search
+{
+  "size": 0,
+  "aggs": {
+    "group_by_state": {
+      "terms": {
+        "field": "gender.keyword"
+      },
+      "aggs": {
+        "average_balance": {
+          "avg": {
+            "field": "balance"
+          }
+        }
+      }
+    }
+  }
+}
+
+
+# Agrupe documentos pelo sexo 
+GET /banco/_search
+{
+  "size": 0,
+  "aggs": {
+    "group_by_gender": {
+      "terms": {
+        "field": "gender.keyword"
+      }
+    }
+  }
+}
+
+# Calcule a média saldo agrupada pelo sexo 
+GET /banco/_search
+{
+  "size": 0,
+  "aggs": {
+    "group_by_state": {
+      "terms": {
+        "field": "gender.keyword"
+      },
+      "aggs": {
+        "average_balance": {
+          "avg": {
+            "field": "balance"
+          }
+        }
+      }
+    }
+  }
+}
