@@ -33,7 +33,6 @@ PUT /meu_indice
 }
 
 
-
 # Criando um documento
 PUT /meu_indice/_doc/1
 {
@@ -147,7 +146,13 @@ POST _bulk
 { "index" : { "_index" : "meu_indice", "_id" : "5" } }
 { "nome" : "Fulano de Ciclano", "nascimento" : "17/09/20","profissao":"Especialista Elastic Stack","idade": 40}
 
-# Bulk usando o comando CURL
+
+
+# Bulk usando o comando CURL no servidor MASTER
+cd /elasticstack/datasets
+wget https://raw.githubusercontent.com/tornis/esstackenterprise/master/datasets/accounts.json
+curl  -H "Content-Type: application/json" -X POST "http://localhost:9200/banco/_doc/_bulk?pretty&refresh" --data-binary "@accounts.json"
+curl -X GET "http://localhost:9200/_cat/indices?v"
 
 
 # Outras operações com API bulk
@@ -159,9 +164,235 @@ POST _bulk
 { "doc" : {"idade" : "50"} }
 
 
+########  Query DSL - Exemplos 
 
 
+# Busca com definição de boosting - Compound(Compostas)
+GET movie/_search
+{
+    "query": {
+        "boosting" : {
+            "positive" : {
+                "match": {
+                    "description": "cat"
+                }
+            },
+            "negative" : {
+                 "match": {
+                     "description": "monkey"
+                }
+            },
+            "negative_boost" : 0.1
+        }
+    },
+    "_source": ["listed_in","description"],
+    "size": 50
+}
 
+
+# Buscando usando query_string - FullText
+GET /banco/_search
+{
+    "query": {
+        "query_string" : {
+            "query" : "(Orick) OR (Nogal)",
+            "default_field" : "city"
+        }
+    }
+}
+
+# Busca usando simple_query_string - FullText
+GET /banco/_search
+{
+  "query": {
+    "simple_query_string" : {
+        "query": "Court",
+        "fields": ["address", "firstname"],
+        "default_operator": "and"
+    }
+  }
+}
+
+
+# Busca usando Match 
+
+GET /movie/_search
+{
+  "size": 20, 
+  "query": {
+      "match" : {
+          "description": {
+            "query": "cat monkey",
+            "operator": "or"
+          }
+      }
+  }
+}
+
+# Retornando apenas documentos onde campo account_number for igual a 20
+GET /banco/_search
+{
+  "query": { "match": { "account_number": 20 } }
+}
+
+# Retornando apenas documentos onde termo address contiver "mill"
+GET /banco/_search
+{
+  "query": { "match": { "address": "mill" } }
+}
+
+# Retornando documentos onde termo address contiver "nova ou ford"
+GET /banco/_search
+{
+  "query": { "match": { "address": "nova ford" } }
+}
+
+# Retornado documentos que contenha na frase "thomas street"
+GET /banco/_search
+{
+  "query": { "match_phrase": { "address": " thomas street" } }
+}
+
+# Retorna todos os documentos em que os dois termos pesquisados sejam verdadeiros
+GET /banco/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        { "match": { "address": "street" } },
+        { "match": { "address": "ford" } }
+      ]
+    }
+  }
+}
+
+# Retorna todos os documentos em que um dos termos pesquisados seja verdadeiro
+GET /banco/_search
+{
+  "query": {
+    "bool": {
+      "should": [
+        { "match": { "address": "street" } },
+        { "match": { "address": "ford" } }
+      ]
+    }
+  }
+}
+
+# Retorna todas os documentos que não contenha os termo "ford" e "street"
+GET /banco/_search
+{
+  "query": {
+    "bool": {
+      "must_not": [
+        { "match": { "address": "ford" } },
+        { "match": { "address": "street" } }
+      ]
+    }
+  }
+}
+
+# Retorna todos os documentos de pessoas com 40 anos mas que não vive na cidade de Oretta
+GET /banco/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        { "match": { "age": "40" } }
+      ],
+      "must_not": [
+        { "match": { "city": "Oretta" } }
+      ]
+    }
+  }
+}
+
+# Buscando valores entre um range de idade 
+GET /banco/_search
+{
+  "query": {
+    "bool": {
+      "must": { "match_all": {} },
+      "filter": {
+        "range": {
+          "age": {
+            "gte": 20,
+            "lte": 30
+          }
+        }
+      }
+    }
+  }
+}
+
+
+# Busca usando URIs
+GET /banco/_search?q=*&sort=account_number:desc
+
+# Busca todos os documentos
+GET /banco/_search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+# Busca todos os documentos mas limitando o resultado com size
+GET /banco/_search
+{
+  "query": {
+    "match_all": {}
+  },
+  "size": 1
+}
+# Busca todos os documentos mas limitando o resultado from size
+GET /banco/_search
+{
+  "query": {
+    "match_all": {}
+  },
+  "from": 50, 
+  "size": 10
+}
+# Busca todos os documentos em ordem decrescente sort
+GET /banco/_search
+{
+  "query": { "match_all": {} },
+  "sort": [
+    { "account_number": "desc" }
+  ]
+}
+
+# Retornando apenas campos desejados _source
+GET /banco/_search
+{
+  "query": { "match_all": {} },
+  "_source": ["account_number", "balance"]
+}
+
+# QUERY DSL - Buscas com Geoespacialização
+
+# Busca por uma área definiada Geo Bounding Box
+GET crimessp/_search
+{
+    "query": {
+        "bool" : {
+            "must" : {
+                "match_all" : {}
+            },
+            "filter" : {
+                "geo_bounding_box" : {
+                    "latlong" : {
+                        "top_left" : "-23.54, -46.46",
+                        "bottom_right" : "-23.58, -46.71"
+                    }
+                }
+            }
+    }
+  }
+}
+
+
+### AGREGAÇÕES - EXEMPLOS
 
 # AGREGAÇÕES - Agrupe por faixa etária, sexo e calcule a media do saldo 
 GET /banco/_search

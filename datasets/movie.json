@@ -1,0 +1,46 @@
+{
+  "settings": {
+    "number_of_replicas": 0,
+    "number_of_shards": 1
+  }, 
+  "mappings": {
+      "properties": {
+        "cast": {
+          "type": "text"
+        },
+        "country": {
+          "type": "text"
+        },
+        "date_added": {
+          "type": "keyword"
+        },
+        "description": {
+          "type": "text"
+        },
+        "director": {
+          "type": "text"
+        },
+        "duration": {
+          "type": "keyword"
+        },
+        "listed_in": {
+          "type": "text"
+        },
+        "rating": {
+          "type": "keyword"
+        },
+        "release_year": {
+          "type": "long"
+        },
+        "show_id": {
+          "type": "long"
+        },
+        "title": {
+          "type": "text"
+        },
+        "type": {
+          "type": "keyword"
+        }
+      }
+    }
+  }

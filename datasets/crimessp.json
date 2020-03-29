@@ -1,0 +1,126 @@
+{
+  "settings": {
+    "number_of_replicas": 0,
+    "number_of_shards": 1
+  }, 
+  "mappings": {
+      "properties": {
+        "@timestamp": {
+          "type": "date"
+        },
+        "Bicicleta": {
+          "type": "keyword"
+        },
+        "Bolsa ou Mochila": {
+          "type": "keyword"
+        },
+        "Carteira": {
+          "type": "keyword"
+        },
+        "Cartão de Crédito": {
+          "type": "keyword"
+        },
+        "Celular": {
+          "type": "keyword"
+        },
+        "Computador": {
+          "type": "keyword"
+        },
+        "DVD": {
+          "type": "keyword"
+        },
+        "Dinheiro": {
+          "type": "keyword"
+        },
+        "Documentos": {
+          "type": "keyword"
+        },
+        "Equipamento de Som": {
+          "type": "keyword"
+        },
+        "Estepe": {
+          "type": "keyword"
+        },
+        "MP4 ou Ipod": {
+          "type": "keyword"
+        },
+        "Móveis": {
+          "type": "keyword"
+        },
+        "Notebook": {
+          "type": "keyword"
+        },
+        "Outros": {
+          "type": "keyword"
+        },
+        "Relógio": {
+          "type": "keyword"
+        },
+        "Som": {
+          "type": "keyword"
+        },
+        "Tablet": {
+          "type": "keyword"
+        },
+        "Tv": {
+          "type": "keyword"
+        },
+        "bairro": {
+          "type": "keyword"
+        },
+        "created_at": {
+          "type": "date",
+          "format": "yyyy-MM-dd HH:mm:ss.SSS"
+        },
+        "descricao": {
+          "type": "text"
+        },
+        "endereco": {
+          "type": "text"
+        },
+        "id": {
+          "type": "long"
+        },
+        "id_1": {
+          "type": "long"
+        },
+        "ip_address_origin": {
+          "type": "keyword"
+        },
+        "latitude": {
+          "type": "double"
+        },
+        "latlong": {
+          "type": "geo_point"
+        },
+        "longitude": {
+          "type": "double"
+        },
+        "registrou_bo": {
+          "type": "keyword"
+        },
+        "sexo": {
+          "type": "long"
+        },
+        "time": {
+          "type": "date",
+          "format": "yyyy-MM-dd HH:mm:ss.SSS"
+        },
+        "tipo_assalto_id": {
+          "type": "long"
+        },
+        "titulo": {
+          "type": "text"
+        },
+        "uri": {
+          "type": "keyword"
+        },
+        "user_id": {
+          "type": "double"
+        },
+        "valor_prejuizo": {
+          "type": "double"
+        }
+      }
+    }
+  }
