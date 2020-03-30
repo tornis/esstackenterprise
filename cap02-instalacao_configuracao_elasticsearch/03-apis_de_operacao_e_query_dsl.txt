@@ -72,6 +72,24 @@ POST meu_indice/_update/1
 }
 
 
+# Update by query com consulta DSL
+
+POST meu_indice/_update_by_query
+{
+  "script": {
+    "source": "ctx._source.idade += params.count",
+        "lang": "painless",
+        "params" : {
+            "count" : 20
+        }
+  },
+  "query": {
+    "match_all": {}
+  }
+}
+
+
+
 # Buscando/Consultando documentos
 GET /meu_indice/_search?q=nome:Fulano de Beltrano
 
