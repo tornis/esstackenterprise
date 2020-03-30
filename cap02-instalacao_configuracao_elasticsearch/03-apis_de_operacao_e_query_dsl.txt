@@ -59,7 +59,7 @@ POST meu_indice/_update/1
     }
 }
 
-# Alterando baseado em consulta - update_by_query 
+# Alterando baseado em consulta - update_by_script
 POST meu_indice/_update/1
 {
     "script" : {
