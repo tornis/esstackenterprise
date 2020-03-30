@@ -151,8 +151,13 @@ POST _bulk
 # Bulk usando o comando CURL no servidor MASTER
 cd /elasticstack/datasets
 wget https://raw.githubusercontent.com/tornis/esstackenterprise/master/datasets/accounts.json
-curl  -H "Content-Type: application/json" -X POST "http://localhost:9200/banco/_doc/_bulk?pretty&refresh" --data-binary "@accounts.json"
-curl -X GET "http://localhost:9200/_cat/indices?v"
+wget https://raw.githubusercontent.com/tornis/esstackenterprise/master/datasets/movie.json
+wget https://raw.githubusercontent.com/tornis/esstackenterprise/master/datasets/crimessp.json
+
+curl -u elastic:123456 -k -H "Content-Type: application/json" -X POST "https://localhost:9200/banco/_doc/_bulk?pretty&refresh" --data-binary "@accounts.json"
+curl -u elastic:123456 -k -H "Content-Type: application/json" -X PUT "https://localhost:9200/movie?pretty" --data-binary "@movie.json"
+curl -u elastic:123456 -k -H "Content-Type: application/json" -X PUT "http://localhosts:9200/crimessp?pretty" --data-binary "@crimessp.json"
+curl -u elastic:123456 -k -X GET "https://localhost:9200/_cat/indices?v"	
 
 
 # Outras operações com API bulk
@@ -391,10 +396,24 @@ GET crimessp/_search
   }
 }
 
+# Busca more_like_this
+
+GET crimessp/_search
+{
+    "query": {
+        "more_like_this" : {
+            "fields" : ["titulo", "descricao"],
+            "like" : "brinquedo arma",
+            "min_term_freq" : 1,
+            "max_query_terms" : 12
+        }
+    }
+}
+
 
 ### AGREGAÇÕES - EXEMPLOS
 
-# AGREGAÇÕES - Agrupe por faixa etária, sexo e calcule a media do saldo 
+# AGREGAÇÕES BUCKETS + METRIC - Agrupe por faixa etária, sexo e calcule a media do saldo 
 GET /banco/_search
 {
   "size": 0,
@@ -436,7 +455,7 @@ GET /banco/_search
 }
 
 
-# Calcule a média saldo agrupada pelo sexo 
+# AGREGAÇÕES BUCKETS + METRIC- Calcule a média saldo agrupada pelo sexo 
 GET /banco/_search
 {
   "size": 0,
@@ -457,7 +476,7 @@ GET /banco/_search
 }
 
 
-# Agrupe documentos pelo sexo 
+# AGREGAÇÕES BUCKETS - Agrupe documentos pelo sexo 
 GET /banco/_search
 {
   "size": 0,
@@ -470,7 +489,7 @@ GET /banco/_search
   }
 }
 
-# Calcule a média saldo agrupada pelo sexo 
+# AGREGAÇÕES BUCKETS + METRIC Calcule a média saldo agrupada pelo sexo 
 GET /banco/_search
 {
   "size": 0,
@@ -489,3 +508,72 @@ GET /banco/_search
     }
   }
 }
+
+# AGREGAÇÕES METRIC - Máximo, Minimo,  de um conjunto de valores
+GET /banco/_search
+{
+    "aggs" : {
+        "max_price" : { "max" : { "field" : "balance" } }
+    }
+}
+
+
+# AGREGAÇÕES METRIC - Percentils - Geralmente para identificar anomalias 
+GET /crimessp/_search
+{
+    "size": 0,
+    "aggs" : {
+        "valor_outlier" : {
+            "percentiles" : {
+                "field" : "valor_prejuizo",
+                "percents" : [95, 99, 99.9]
+            }
+        }
+    }
+}	
+
+
+# AGREGAÇÕES METRIC - Desvio Absoluto Mediano - Utilizando para verificar variabilidade de um dado
+GET crimessp/_search
+{
+  "size": 0,
+  "aggs": {
+    "review_average": {
+      "avg": {
+        "field": "valor_prejuizo"
+      }
+    },
+    "review_variability": {
+      "median_absolute_deviation": {
+        "field": "valor_prejuizo" 
+      }
+    }
+  }
+}
+
+# PIPELINE AGGREGATION - Sum Bucket
+GET crimessp/_search
+{
+    "size": 0,
+    "aggs" : {
+        "prejuizo_mes" : {
+            "date_histogram" : {
+                "field" : "time",
+                "calendar_interval" : "month"
+            },
+            "aggs": {
+                "valor": {
+                    "sum": {
+                        "field": "valor_prejuizo"
+                    }
+                }
+            }
+        },
+        "soma_total_meses": {
+            "sum_bucket": {
+                "buckets_path": "prejuizo_mes>valor" 
+            }
+        }
+    }
+}
+
