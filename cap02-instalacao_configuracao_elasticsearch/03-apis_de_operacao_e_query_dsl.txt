@@ -52,9 +52,11 @@ PUT /meu_indice/_doc/1
 }
 
 #Usando a API de Update 
-PUT meu_indice/_doc/1
+POST meu_indice/_update/1
 {
-    "idade" : 25
+	"doc": {
+    	"idade" : 25
+    }
 }
 
 # Alterando baseado em consulta - update_by_query 
