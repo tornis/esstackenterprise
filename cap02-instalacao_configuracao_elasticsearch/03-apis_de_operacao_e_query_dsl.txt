@@ -152,11 +152,15 @@ POST _bulk
 cd /elasticstack/datasets
 wget https://raw.githubusercontent.com/tornis/esstackenterprise/master/datasets/accounts.json
 wget https://raw.githubusercontent.com/tornis/esstackenterprise/master/datasets/movie.json
+wget https://raw.githubusercontent.com/tornis/esstackenterprise/master/datasets/movie-data.json
 wget https://raw.githubusercontent.com/tornis/esstackenterprise/master/datasets/crimessp.json
+wget https://raw.githubusercontent.com/tornis/esstackenterprise/master/datasets/crimessp-data.json
 
 curl -u elastic:123456 -k -H "Content-Type: application/json" -X POST "https://localhost:9200/banco/_doc/_bulk?pretty&refresh" --data-binary "@accounts.json"
 curl -u elastic:123456 -k -H "Content-Type: application/json" -X PUT "https://localhost:9200/movie?pretty" --data-binary "@movie.json"
 curl -u elastic:123456 -k -H "Content-Type: application/json" -X PUT "http://localhosts:9200/crimessp?pretty" --data-binary "@crimessp.json"
+curl -u elastic:123456 -k -H "Content-Type: application/json" -X PUT "http://localhosts:9200/crimessp/_doc/_bulk?pretty&refresh" --data-binary "@crimessp-data.json"
+curl -u elastic:123456 -k -H "Content-Type: application/json" -X PUT "http://localhosts:9200/movie/_doc/_bulk?pretty&refresh" --data-binary "@movie-data.json"
 curl -u elastic:123456 -k -X GET "https://localhost:9200/_cat/indices?v"	
 
 
@@ -576,4 +580,40 @@ GET crimessp/_search
         }
     }
 }
+
+
+###### API _CAT ######
+
+# Verificando a saúde do cluster
+GET _cat/health?v
+
+# verificando alias existentes
+GET _cat/aliases?v
+GET _cat/aliases/<alias>
+
+# checando estado do indice
+GET _cat/indices?v
+
+# verificando quais masters estão no cluster
+GET _cat/master?v
+
+# verificando quais nós estão no cluster
+GET _cat/nodes?v
+
+# verificando os atributos habilitados dos nodes
+GET _cat/nodeattrs?v
+
+# verificando quantos documentos tem no cluster
+GET _cat/count?v
+
+# verificando quantos documentos tem no cluster
+GET _cat/count?v
+
+# verificando alocação de shards
+GET _cat/allocation
+GET _cat/allocation/<node_id>
+
+# verificando segmets dos shards
+GET _cat/segments/<index>
+GET _cat/segments?v
 
