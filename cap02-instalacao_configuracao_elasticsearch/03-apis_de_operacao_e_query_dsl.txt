@@ -89,7 +89,6 @@ POST meu_indice/_update_by_query
 }
 
 
-
 # Buscando/Consultando documentos
 GET /meu_indice/_search?q=nome:Fulano de Beltrano
 
