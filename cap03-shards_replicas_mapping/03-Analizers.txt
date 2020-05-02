@@ -1,0 +1,205 @@
+# Definindo o analisado para o campo nome
+
+PUT meuindice
+{
+  "mappings": {
+    "properties": {
+      "nome": {
+        "type":     "text",
+        "analyzer": "standard"
+      }
+    }
+  }
+}
+
+POST _analyze 
+{
+  "analyzer": "standard",
+  "text": "Rodrigo tornis dá Silva OLIVEIRA"
+}
+
+
+# Testando o analisador whitespace
+POST _analyze
+{
+  "analyzer": "standard",
+  "text":     "O rato roeu a roupa do rei de roma"
+}
+
+# Testando o analisador uppercase do standard
+POST _analyze
+{
+  "tokenizer": "standard",
+  "filter":  [ "uppercase","stemmer" ],
+  "text":      "O rato roeu a roupa do rei de roma dane-se"
+}
+
+# Testando o analisador uppercase do standard
+POST _analyze
+{
+  "analyzer": "stop",
+  "text":      "O rato roeu a roupa do rei de roma"
+}
+
+# Alterando o analazador Standard para a sua customização
+PUT /meuindice2
+{
+  "settings": {
+    "analysis": {
+      "filter": {
+        "brazilian_stop": {
+          "type":       "stop",
+          "stopwords":  "_brazilian_" 
+        },
+        "brazilian_keywords": {
+          "type":       "keyword_marker",
+          "keywords":   ["exemplo"] 
+        },
+        "brazilian_stemmer": {
+          "type":       "stemmer",
+          "language":   "brazilian"
+        }
+      },
+      "analyzer": {
+        "rebuilt_brazilian": {
+          "tokenizer":  "standard",
+          "filter": [
+            "lowercase",
+            "brazilian_stop",
+            "brazilian_keywords",
+            "brazilian_stemmer"
+          ]
+        }
+      }
+    }
+  }
+}
+
+POST meuindice2/_analyze
+{
+  "analyzer": "standard",
+  "text":     "O rato roeu a roupa do rei de roma"
+}
+
+# Testando o analisardor brasileiro
+POST meuindice2/_analyze
+{
+  "tokenizer": "standard",
+  "filter": [ "brazilian_stop" ], 
+  "text":     "O rato roeu a roupa do rei de roma"
+}
+
+# Testando o Filtro do analisador
+POST meuindice2/_analyze
+{
+  "tokenizer": "standard",
+  "filter":  [ "brazilian_stemmer" ],
+  "text":      "O RATO roeu a ROUPA do rei de roma guarda-roupa"
+}
+
+# Customizando o seu analizer e aplicando no seu campo
+PUT meuindice3
+{
+  "settings": {
+    "analysis": {
+      "filter": {
+        "brazilian_stemmer": {
+          "type":       "stemmer",
+          "language":   "brazilian"
+        },
+        "brazilian_stop": {
+          "type":       "stop",
+          "stopwords":  "_brazilian_" 
+        }
+      }, 
+      "analyzer": {
+        "meu_analizador": {
+          "type": "custom", 
+          "tokenizer": "standard",
+          "char_filter": [
+            "html_strip"
+          ],
+          "filter": [
+            "lowercase",
+            "asciifolding",
+            "brazilian_stemmer",
+            "brazilian_stop"
+          ]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "nome" : {
+        "type": "text",
+        "analyzer": "meu_analizador"
+      }
+    }
+  }
+}
+
+POST meuindice3/_doc
+{
+  "nome" : "<html>Rodrigo Tornis da Silva Sauro é legal</html>"
+}
+
+POST meuindice3/_analyze
+{
+  "analyzer": "standard",
+  "text": "<html>Rodrigo Tornis da Silva Sauro é legal</html>"
+}
+
+GET meuindice3/_search
+{
+  "query": {
+    "match": {
+      "nome": "fulano"
+    }
+  }
+}
+
+# Customizando em tempo de busca
+DELETE meuindice3 
+PUT meuindice3
+{
+  "settings": {
+    "analysis": {
+      "filter": {
+        "brazilian_stemmer": {
+          "type":       "stemmer",
+          "language":   "brazilian"
+        },
+        "brazilian_stop": {
+          "type":       "stop",
+          "stopwords":  "_brazilian_" 
+        }
+      }, 
+      "analyzer": {
+        "meu_analizador": {
+          "type": "custom", 
+          "tokenizer": "standard",
+          "char_filter": [
+            "html_strip"
+          ],
+          "filter": [
+            "lowercase",
+            "asciifolding",
+            "brazilian_stemmer",
+            "brazilian_stop"
+          ]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "nome" : {
+        "type": "text",
+        "analyzer": "meu_analizador"
+        "search_analizer": "standard"
+      }
+    }
+  }
+}
+

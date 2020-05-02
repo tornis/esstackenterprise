@@ -1,0 +1,136 @@
+PUT banco
+PUT banco2
+
+# Criando um alias
+POST /_aliases
+{
+    "actions" : [
+        { "add" : { "index" : "banco2", "alias" : "meualias" } }
+    ]
+}
+
+GET _alias/meualias
+
+POST banco2/_doc
+{
+  "nome": "Joca neve"
+}
+
+GET meualias/_search?q=Fulano
+
+
+POST /_aliases
+{
+    "actions" : [
+        { "remove":{ "index" : "banco", "alias" : "meualias" }},
+        { "remove":{ "index" : "banco2", "alias" : "meualias" }}
+    ]
+}
+
+
+
+# Usando coringa para adicionar mais indices a um alias
+
+POST /_aliases
+{
+    "actions" : [
+        { "add" : { "index" : "banco*", "alias" : "meualias" } }
+    ]
+}
+
+
+
+PUT banco
+{
+  "mappings": {
+    "properties": {
+      "nome": {
+        "type": "text"
+      },
+      "gender": {
+        "type": "keyword"
+      }
+    }
+  }
+}
+
+
+POST banco/_doc
+{
+  "nome": "Joana de Ciclano",
+  "gender": "F"
+}
+
+
+# Usando critérios para criação de alias
+POST /_aliases
+{
+    "actions" : [
+        {
+            "add" : {
+                 "index" : "banco",
+                 "alias" : "mulher",
+                 "filter" : { "term" : { "gender" : "F" } 
+                 }
+            }
+        }
+    ]
+}
+
+
+GET mulher/_search
+
+
+PUT banco2
+{
+  "mappings": {
+    "properties": {
+      "nome": {
+        "type": "text"
+      },
+      "gender": {
+        "type": "keyword"
+      }
+    }
+  }
+}
+
+
+POST credito/_doc
+{
+  "nome": "Beltrano de Beltrano",
+  "gender": "M"
+}
+
+GET credito/_search
+
+# Definindo um alias de gravação
+POST /_aliases
+{
+    "actions" : [
+        {
+            "add" : {
+                 "index" : "banco",
+                 "alias" : "credito"
+            }
+        },
+        {
+            "add" : {
+                 "index" : "banco2",
+                 "alias" : "credito",
+                 "is_write_index" : true
+            }
+        }
+    ]
+}
+
+
+
+
+
+
+
+
+
+
+

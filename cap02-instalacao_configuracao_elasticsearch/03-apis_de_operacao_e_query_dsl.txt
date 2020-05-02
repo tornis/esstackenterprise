@@ -177,9 +177,9 @@ wget https://raw.githubusercontent.com/tornis/esstackenterprise/master/datasets/
 
 curl -u elastic:123456 -k -H "Content-Type: application/json" -X POST "https://localhost:9200/banco/_doc/_bulk?pretty&refresh" --data-binary "@accounts.json"
 curl -u elastic:123456 -k -H "Content-Type: application/json" -X PUT "https://localhost:9200/movie?pretty" --data-binary "@movie.json"
-curl -u elastic:123456 -k -H "Content-Type: application/json" -X PUT "http://localhosts:9200/crimessp?pretty" --data-binary "@crimessp.json"
-curl -u elastic:123456 -k -H "Content-Type: application/json" -X PUT "http://localhosts:9200/crimessp/_doc/_bulk?pretty&refresh" --data-binary "@crimessp-data.json"
-curl -u elastic:123456 -k -H "Content-Type: application/json" -X PUT "http://localhosts:9200/movie/_doc/_bulk?pretty&refresh" --data-binary "@movie-data.json"
+curl -u elastic:123456 -k -H "Content-Type: application/json" -X PUT "https://localhost:9200/crimessp?pretty" --data-binary "@crimessp.json"
+curl -u elastic:123456 -k -H "Content-Type: application/json" -X PUT "https://localhost:9200/crimessp/_doc/_bulk?pretty&refresh" --data-binary "@crimessp-data.json"
+curl -u elastic:123456 -k -H "Content-Type: application/json" -X PUT "https://localhost:9200/movie/_doc/_bulk?pretty&refresh" --data-binary "@movie-data.json"
 curl -u elastic:123456 -k -X GET "https://localhost:9200/_cat/indices?v"	
 
 

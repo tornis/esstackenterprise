@@ -1,0 +1,158 @@
+# Checando os nodes do cluster
+GET _cat/nodes?v
+
+# Checado os Shards do cluster e sua distribuição dentro dos nodes 
+GET _cat/shards?v
+
+# Chacando status dos segments dos shards nos indices 
+GET _cat/segments?v
+
+# Checando os atributos dos nodes para Zone e HotWarm
+GET _cat/nodeattrs
+
+# Forçando a realocação Awreness de shads para zona 2(Datanode 2)
+PUT _cluster/settings
+{
+  "transient": { 
+    "cluster.routing.allocation.awareness.attributes": "zone",
+    "cluster.routing.allocation.awareness.force.zone.values": "2"
+  }
+}
+
+# Desabilitando a realocação Awreness shads para zona 2(Datanode 2)
+PUT _cluster/settings
+{
+  "transient": { 
+    "cluster.routing.allocation.awareness.attributes": "zone",
+    "cluster.routing.allocation.awareness.force.zone.values": "2"
+  }
+
+
+# Usando a realocação por filtro 
+PUT _cluster/settings
+{
+  "transient": {
+    "cluster.routing.allocation.exclude._ip": "10.10.10.30"
+  }
+}
+
+# Desabilitando a realocação por filtro 
+PUT _cluster/settings
+{
+  "transient": {
+    "cluster.routing.allocation.exclude._ip": "10.10.10.30"
+  }
+}
+
+
+# Configurando o Watermark - Realocação Disk Based 
+PUT _cluster/settings
+{
+  "transient": {
+    "cluster.routing.allocation.disk.watermark.low": "90%",
+    "cluster.routing.allocation.disk.watermark.high": "95%"
+  }
+}
+
+
+# Checando as configurações default do cluster
+GET _cluster/settings?include_defaults
+
+
+# Definindo o roteamento Hot dos shards
+PUT meuindice3/
+{
+  "settings": {
+    "index.routing.allocation.require.type": "hot",
+    "number_of_shards": 3, 
+    "number_of_replicas": 1
+  }
+}
+
+# Definindo o roteamento Warm dos shards
+PUT meuindice3/_settings
+{
+    "index.routing.allocation.require.type": "warm"
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+PUT novoindice 
+{
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 1,
+    "refresh_interval": "0"
+  }
+}
+
+POST novoindice/_doc/1
+{
+  "nome": "Rodrigo"
+}
+
+PUT _cluster/settings
+{
+  "transient": { 
+    "cluster.routing.allocation.awareness.attributes": "",
+    "cluster.routing.allocation.awareness.force.zone.values": ""
+  }
+}
+
+GET _cat/nodes?v
+
+GET _cat/shards?v
+
+
+GET _cluster/allocation/explain
+
+PUT aloca/_settings
+{
+    "number_of_replicas": 1
+}
+
+
+PUT _cluster/settings
+{
+  "transient": {
+    "cluster.routing.allocation.exclude._ip": ""
+  }
+}
+
+
+PUT meuindice
+{
+  "settings": {
+    "index.routing.allocation.require.box_type": "hot"
+  }
+}
+

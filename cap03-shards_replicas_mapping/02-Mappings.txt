@@ -1,0 +1,146 @@
+# Exemplo 1 - Mapeamento sintax
+PUT teste
+{
+  "mappings": {
+    "properties": {
+      "idade":    { "type": "integer" },  
+      "email":  { "type": "keyword"  }, 
+      "nome":   { "type": "text"  }     
+    }
+  }
+}
+
+# Exemplo 2  - Alteração de Mapping
+PUT /teste/_mapping
+{
+  "properties": {
+    "sexo": {
+      "type": "keyword",
+      "index": false
+    }
+  }
+}
+
+
+# Definção de Esquema 
+PUT ponto
+{
+  "mappings": {
+    "dynamic": false,
+    "numeric_detection": true,
+    "dynamic_date_formats": ["MM/dd/yyyy"],
+    "properties": {
+      "cod_empregado": {
+        "type": "integer"
+      },
+      "nome_empregado":{
+        "type": "keyword",
+        "copy_to": "campo_pesquisa", 
+        "fields": {
+          "raw": {
+            "type": "text"
+          }
+        }
+      },
+      "entrada": {
+        "type": "date",
+        "format": "yyyy-MM-dd"
+      },
+      "saida": {
+        "type": "alias",
+        "path": "entrada" 
+      },
+      "local_equipamento": {
+        "type": "geo_point"
+      },
+      "ip_origem": {
+        "type": "ip",
+        "ignore_malformed": true
+      },
+      "oservacao": {
+        "type": "text",
+        "enabled": false,
+        "ignore_above": 256
+      },
+      "campo_pesquisa": {
+          "type": "text"
+      }
+    }
+  }
+}
+
+# Mapeamento dinamico 
+
+PUT exemplo
+{
+"mappings": { 
+  "dynamic_templates": [
+      {
+        "integers": {
+          "match_mapping_type": "long",
+          "mapping": {
+            "type": "integer"
+          }
+        }
+      }
+    ]
+  }
+}
+
+# Template de Indice + Mapeamento
+PUT _template/ponto
+{
+  "index_patterns": ["ponto*", "filial-ponto*"],
+  "settings": {
+    "number_of_shards": 3,
+    "number_of_replicas": 1
+  },
+  "mappings": {
+    "dynamic": false,
+    "numeric_detection": true,
+    "dynamic_date_formats": ["yyyy-MM-dd"],
+    "properties": {
+      "cod_empregado": {
+        "type": "integer"
+      },
+      "nome_empregado":{
+        "type": "keyword",
+        "copy_to": "campo_pesquisa", 
+        "fields": {
+          "raw": {
+            "type": "text"
+          }
+        }
+      },
+      "entrada": {
+        "type": "date",
+        "format": "yyyy-MM-dd"
+      },
+      "saida": {
+        "type": "alias",
+        "path": "entrada" 
+      },
+      "local_equipamento": {
+        "type": "geo_point"
+      },
+      "ip_origem": {
+        "type": "ip",
+        "ignore_malformed": true
+      },
+      "oservacao": {
+        "type": "text",
+        "enabled": false,
+        "ignore_above": 256
+      },
+      "campo_pesquisa": {
+          "type": "text"
+      }
+    }
+  }
+}
+
+PUT ponto-filial-df
+
+
+
+
