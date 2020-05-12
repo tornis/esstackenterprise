@@ -1,0 +1,301 @@
+# Criar pipeline de CEP
+PUT _ingest/pipeline/cep
+{
+  "description": "Pipeline de tratamento de CEPs", 
+  "processors": [{
+    "csv": {
+      "field": "message",
+      "separator": ";",
+      "trim": true,
+      "target_fields": ["cep","cidade_uf","bairro","logradouro","complemento"]
+    },
+    "dissect": {
+      "field": "cidade_uf",
+      "pattern": "%{cidade}/%{uf}"
+    },
+    "set": {
+        "field": "processamento",
+        "value": "{{_ingest.timestamp}}"
+    },
+    "remove": {
+      "field": ["message","cidade_uf"]
+    },
+    "drop": {
+      "if": "ctx.cep == '01000000'"
+    }
+  }]
+}
+
+# Testando o Pipeline com o _simulate
+POST _ingest/pipeline/cep/_simulate
+{
+  "docs": [
+    {
+      "_source": {
+        "message":"01000000;São Paulo/SP;Sé;Praça da Sé, 108 ; UNESP - Universidade Estadual Júlio de Mesquita Filho"
+      }
+    },
+    {
+      "_source": {
+        "message":"99975970;São João Bosco (Ciríaco)/RS  - Distrito;Centro;Rua Principal, s/n ; AGC São João Bosco"
+      }
+    },
+    {
+      "_source": {
+        "message":"99945000;Vitória (Ibiaçá)/RS  - Distrito;;;"
+      }
+    },
+    {
+      "_source": {
+        "message":"70610904;Brasília/DF;Setores Complementares;SGO Quadra 2 Lote 190/250 ; ECT - Gerência de Operações (DR/BSB)"
+      }
+    },
+    {
+      "_source": {
+        "message":"75065080;Anápolis/GO;Vila Harmonia;Rua Sebastião Pedro;"
+      }
+    }
+  ]
+}
+
+# Configurando o Indice para ingestão com o Pipeline
+POST cep/_doc?pipeline=cep
+{
+  "message":"75065080;Anápolis/GO;Vila Harmonia;Rua Sebastião Pedro;"
+}
+
+GET cep/_search
+
+# Configurando o Indice para ingestão com o pipeline settings
+PUT cep_novo
+{
+  "settings": {
+    "default_pipeline": "cep",
+    "number_of_shards": 1,
+    "number_of_replicas": 0
+  },
+  "mappings": {
+    "properties": {
+      "cep": {
+        "type": "text"
+      },
+      "cidade": {
+        "type": "keyword"
+      },
+      "uf": {
+        "type": "keyword"
+      },
+      "logradouro": {
+        "type": "text"
+      },
+      "complemento": {
+        "type": "text"
+      }
+    }
+  }
+}
+
+POST cep_novo/_doc
+{
+  "message": "75065080;Anápolis/GO;Vila Harmonia;Rua Sebastião Pedro;"
+}
+
+GET cep_novo/_search
+
+
+# Adicionando o pipeline de IDH
+PUT _ingest/pipeline/idh
+{
+  "description": "Pipeline de tratamento de IDH municipio", 
+  "processors": [{
+    "csv": {
+      "field": "message",
+      "separator": ";",
+      "trim": true,
+      "target_fields": ["cod_ibge","municipio","idh_municipio","idh_educacao","idh_longevidade","idh_renda"]
+    },
+    "remove": {
+      "field": ["message"]
+    }
+  }]
+}
+
+# Testando o pipeline do IDH
+POST _ingest/pipeline/idh/_simulate
+{
+  "docs": [
+    {
+      "_source": {
+        "message":"522185;VALPARAÍSO DE GOIÁS;0,746;0,695;0,815;0,733"
+      }
+    },
+    {
+      "_source": {
+        "message":"530010;BRASÍLIA;0,824;0,742;0,873;0,863"
+      }
+    },
+    {
+      "_source": {
+        "message":"110006;COLORADO DO OESTE;0,685;0,584;0,814;0,676 "
+      }
+    },
+    {
+      "_source": {
+        "message":"350660;BIRITIBA-MIRIM;0,712;0,64;0,795;0,71"
+      }
+    }
+  ]
+}
+
+
+# Condicionais de pipelines
+
+PUT _ingest/pipeline/processa_dados
+{
+  "description": "pipeline to pipeline",
+  "version": 1,
+  "processors": [
+    {
+      "pipeline": {
+        "if": "ctx.origem == 'cep'",
+        "name": "cep"
+      }
+    },
+    {
+      "pipeline": {
+        "if": "ctx.origem == 'idh'",
+        "name": "idh"
+      }
+    },
+    {
+      "fail": {
+        "if": "ctx.origem != 'cep' && ctx.origem != 'idh'",
+        "message": "Dados não processados pelo pipeline `cep` e `idh`"
+      }
+    }
+  ]
+}
+
+POST _ingest/pipeline/processa_dados/_simulate
+{
+  "docs": [
+    {
+      "_source": {
+        "origem":"idh",
+        "message":"522185;VALPARAÍSO DE GOIÁS;0,746;0,695;0,815;0,733"
+      }
+    },
+    {
+      "_source": {
+        "origem":"cep",
+        "message":"70610904;Brasília/DF;Setores Complementares;SGO Quadra 2 Lote 190/250 ; ECT - Gerência de Operações (DR/BSB)"
+      }
+    },
+    {
+      "_source": {
+        "origem":"idh",
+        "message":"110006;COLORADO DO OESTE;0,685;0,584;0,814;0,676 "
+      }
+    },
+    {
+      "_source": {
+        "origem":"cep",
+        "message":"99945000;Vitória (Ibiaçá)/RS  - Distrito;;;"
+      }
+    },
+    {
+      "_source": {
+        "origem":"noop",
+        "message":"99945000;Vitória (Ibiaçá)/RS  - Distrito;;;"
+      }
+    }
+  ]
+}
+
+# Usando enriquecimento de dados com o processor Erich
+
+
+# Criando o inice lookup
+PUT idh
+{
+  "settings": {
+    "default_pipeline": "idh",
+    "number_of_shards": 1,
+    "number_of_replicas": 0
+  }
+}
+
+# Inserindo os dados no indice IDH
+
+POST idh/_doc?pipeline=idh
+{
+  "message": "355030;SÃO PAULO;0,805;0,725;0,855;0,843"
+}
+
+GET idh/_search
+
+
+# Criando a Policy Enrich
+PUT /_enrich/policy/idh-policy
+{
+    "match": {
+        "indices": "idh",
+        "match_field": "cod_ibge",
+        "enrich_fields": ["idh_municipio","idh_educacao","idh_longevidade","idh_renda"]
+    }
+}
+
+# Criando o indice de enriquecimento
+POST /_enrich/policy/idh-policy/_execute
+
+
+# Adicionado o processo de enrich atrelado a policy
+PUT _ingest/pipeline/cep
+{
+  "description": "Pipeline de tratamento de CEPs", 
+  "processors": [{
+    "csv": {
+      "field": "message",
+      "separator": ";",
+      "trim": true,
+      "target_fields": ["cep","cidade_uf","bairro","logradouro","complemento","cod_ibge"]
+    },
+    "dissect": {
+      "field": "cidade_uf",
+      "pattern": "%{cidade}/%{uf}"
+    },
+    "set": {
+        "field": "processamento",
+        "value": "{{_ingest.timestamp}}"
+    },
+    "remove": {
+      "field": ["message","cidade_uf"]
+    },
+    "enrich" : {
+        "policy_name": "idh-policy",
+        "field" : "cod_ibge",
+        "target_field": "idhm",
+        "max_matches": "1"
+      }
+  }]
+}
+
+# Testando o Enriquecimento 
+POST _ingest/pipeline/cep/_simulate
+{
+  "docs": [
+    {
+      "_source": {
+        "message":"01000000;São Paulo/SP;Sé;Praça da Sé, 108 ; UNESP - Universidade Estadual Júlio de Mesquita Filho;355030"
+      }
+    }
+  ]
+}
+
+
+
+
+
+
+
+
