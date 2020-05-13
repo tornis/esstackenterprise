@@ -1,0 +1,269 @@
+Jul 20, 2018 10:33:23 AM org.apache.catalina.core.ApplicationContext log
+INFO: No Spring WebApplicationInitializer types detected on classpath
+Jul 20, 2018 10:33:23 AM org.apache.catalina.core.ApplicationContext log
+INFO: Initializing Spring root WebApplicationContext
+Jul 20, 2018 10:34:59 AM org.apache.catalina.core.StandardContext listenerStart
+SEVERE: Exception sending context initialized event to listener instance of class org.springframework.web.context.ContextLoaderListener
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'bjuRedisTemplate' defined in file [/data/tomcat-gree_SDE_marketcenter/webapps/ROOT/WEB-INF/classes/spring/spring-redis.xml]: Invocation of init method failed; nested exception is org.I0Itec.zkclient.exception.ZkTimeoutException: Unable to connect to zookeeper server within timeout: 30000
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1583)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:553)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:482)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:306)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:230)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:302)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:197)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:754)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:866)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:542)
+	at org.springframework.web.context.ContextLoader.configureAndRefreshWebApplicationContext(ContextLoader.java:444)
+	at org.springframework.web.context.ContextLoader.initWebApplicationContext(ContextLoader.java:326)
+	at org.springframework.web.context.ContextLoaderListener.contextInitialized(ContextLoaderListener.java:107)
+	at org.apache.catalina.core.StandardContext.listenerStart(StandardContext.java:4994)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5492)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:150)
+	at org.apache.catalina.core.ContainerBase.addChildInternal(ContainerBase.java:901)
+	at org.apache.catalina.core.ContainerBase.addChild(ContainerBase.java:877)
+	at org.apache.catalina.core.StandardHost.addChild(StandardHost.java:649)
+	at org.apache.catalina.startup.HostConfig.deployWAR(HostConfig.java:1081)
+	at org.apache.catalina.startup.HostConfig$DeployWar.run(HostConfig.java:1877)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:262)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.I0Itec.zkclient.exception.ZkTimeoutException: Unable to connect to zookeeper server within timeout: 30000
+	at org.I0Itec.zkclient.ZkClient.connect(ZkClient.java:876)
+	at org.I0Itec.zkclient.ZkClient.<init>(ZkClient.java:98)
+	at org.I0Itec.zkclient.ZkClient.<init>(ZkClient.java:92)
+	at org.I0Itec.zkclient.ZkClient.<init>(ZkClient.java:76)
+	at com.bjucloud.redis.util.ZkclientZookeeperClient.initClient(ZkclientZookeeperClient.java:31)
+	at com.bjucloud.redis.util.ZkclientZookeeperClient.<init>(ZkclientZookeeperClient.java:27)
+	at com.bjucloud.redis.client.RedisTemplate.afterPropertiesSet(RedisTemplate.java:75)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1642)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1579)
+	... 25 more
+
+Jul 20, 2018 10:34:59 AM org.apache.catalina.core.ApplicationContext log
+INFO: Closing Spring root WebApplicationContext
+Jul 20, 2018 10:42:51 AM org.apache.catalina.core.ApplicationContext log
+INFO: No Spring WebApplicationInitializer types detected on classpath
+Jul 20, 2018 10:42:51 AM org.apache.catalina.core.ApplicationContext log
+INFO: Initializing Spring root WebApplicationContext
+Jul 20, 2018 10:43:11 AM org.apache.catalina.core.ApplicationContext log
+INFO: No Spring WebApplicationInitializer types detected on classpath
+Jul 20, 2018 10:43:11 AM org.apache.catalina.core.ApplicationContext log
+INFO: Initializing Spring root WebApplicationContext
+Jul 20, 2018 10:44:01 AM org.apache.catalina.core.ApplicationContext log
+INFO: No Spring WebApplicationInitializer types detected on classpath
+Jul 20, 2018 10:44:02 AM org.apache.catalina.core.ApplicationContext log
+INFO: Initializing Spring root WebApplicationContext
+Jul 20, 2018 10:45:38 AM org.apache.catalina.core.StandardContext listenerStart
+SEVERE: Exception sending context initialized event to listener instance of class org.springframework.web.context.ContextLoaderListener
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'bjuRedisTemplate' defined in file [/data/tomcat-gree_SDE_marketcenter/webapps/ROOT/WEB-INF/classes/spring/spring-redis.xml]: Invocation of init method failed; nested exception is org.I0Itec.zkclient.exception.ZkTimeoutException: Unable to connect to zookeeper server within timeout: 30000
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1583)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:553)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:482)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:306)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:230)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:302)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:197)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:754)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:866)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:542)
+	at org.springframework.web.context.ContextLoader.configureAndRefreshWebApplicationContext(ContextLoader.java:444)
+	at org.springframework.web.context.ContextLoader.initWebApplicationContext(ContextLoader.java:326)
+	at org.springframework.web.context.ContextLoaderListener.contextInitialized(ContextLoaderListener.java:107)
+	at org.apache.catalina.core.StandardContext.listenerStart(StandardContext.java:4994)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5492)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:150)
+	at org.apache.catalina.core.ContainerBase.addChildInternal(ContainerBase.java:901)
+	at org.apache.catalina.core.ContainerBase.addChild(ContainerBase.java:877)
+	at org.apache.catalina.core.StandardHost.addChild(StandardHost.java:649)
+	at org.apache.catalina.startup.HostConfig.deployWAR(HostConfig.java:1081)
+	at org.apache.catalina.startup.HostConfig$DeployWar.run(HostConfig.java:1877)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:262)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.I0Itec.zkclient.exception.ZkTimeoutException: Unable to connect to zookeeper server within timeout: 30000
+	at org.I0Itec.zkclient.ZkClient.connect(ZkClient.java:876)
+	at org.I0Itec.zkclient.ZkClient.<init>(ZkClient.java:98)
+	at org.I0Itec.zkclient.ZkClient.<init>(ZkClient.java:92)
+	at org.I0Itec.zkclient.ZkClient.<init>(ZkClient.java:76)
+	at com.bjucloud.redis.util.ZkclientZookeeperClient.initClient(ZkclientZookeeperClient.java:31)
+	at com.bjucloud.redis.util.ZkclientZookeeperClient.<init>(ZkclientZookeeperClient.java:27)
+	at com.bjucloud.redis.client.RedisTemplate.afterPropertiesSet(RedisTemplate.java:75)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1642)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1579)
+	... 25 more
+
+Jul 20, 2018 10:45:38 AM org.apache.catalina.core.ApplicationContext log
+INFO: Closing Spring root WebApplicationContext
+Jul 20, 2018 10:53:31 AM org.apache.catalina.core.ApplicationContext log
+INFO: No Spring WebApplicationInitializer types detected on classpath
+Jul 20, 2018 10:53:31 AM org.apache.catalina.core.ApplicationContext log
+INFO: Initializing Spring root WebApplicationContext
+Jul 20, 2018 10:55:08 AM org.apache.catalina.core.StandardContext listenerStart
+SEVERE: Exception sending context initialized event to listener instance of class org.springframework.web.context.ContextLoaderListener
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'bjuRedisTemplate' defined in file [/data/tomcat-gree_SDE_marketcenter/webapps/ROOT/WEB-INF/classes/spring/spring-redis.xml]: Invocation of init method failed; nested exception is org.I0Itec.zkclient.exception.ZkTimeoutException: Unable to connect to zookeeper server within timeout: 30000
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1583)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:553)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:482)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:306)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:230)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:302)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:197)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:754)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:866)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:542)
+	at org.springframework.web.context.ContextLoader.configureAndRefreshWebApplicationContext(ContextLoader.java:444)
+	at org.springframework.web.context.ContextLoader.initWebApplicationContext(ContextLoader.java:326)
+	at org.springframework.web.context.ContextLoaderListener.contextInitialized(ContextLoaderListener.java:107)
+	at org.apache.catalina.core.StandardContext.listenerStart(StandardContext.java:4994)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5492)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:150)
+	at org.apache.catalina.core.ContainerBase.addChildInternal(ContainerBase.java:901)
+	at org.apache.catalina.core.ContainerBase.addChild(ContainerBase.java:877)
+	at org.apache.catalina.core.StandardHost.addChild(StandardHost.java:649)
+	at org.apache.catalina.startup.HostConfig.deployWAR(HostConfig.java:1081)
+	at org.apache.catalina.startup.HostConfig$DeployWar.run(HostConfig.java:1877)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:262)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.I0Itec.zkclient.exception.ZkTimeoutException: Unable to connect to zookeeper server within timeout: 30000
+	at org.I0Itec.zkclient.ZkClient.connect(ZkClient.java:876)
+	at org.I0Itec.zkclient.ZkClient.<init>(ZkClient.java:98)
+	at org.I0Itec.zkclient.ZkClient.<init>(ZkClient.java:92)
+	at org.I0Itec.zkclient.ZkClient.<init>(ZkClient.java:76)
+	at com.bjucloud.redis.util.ZkclientZookeeperClient.initClient(ZkclientZookeeperClient.java:31)
+	at com.bjucloud.redis.util.ZkclientZookeeperClient.<init>(ZkclientZookeeperClient.java:27)
+	at com.bjucloud.redis.client.RedisTemplate.afterPropertiesSet(RedisTemplate.java:75)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1642)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1579)
+	... 25 more
+
+Jul 20, 2018 10:55:08 AM org.apache.catalina.core.ApplicationContext log
+INFO: Closing Spring root WebApplicationContext
+Jul 20, 2018 11:05:00 AM org.apache.catalina.core.ApplicationContext log
+INFO: No Spring WebApplicationInitializer types detected on classpath
+Jul 20, 2018 11:05:00 AM org.apache.catalina.core.ApplicationContext log
+INFO: Initializing Spring root WebApplicationContext
+Jul 20, 2018 11:05:15 AM org.apache.catalina.core.StandardContext listenerStart
+SEVERE: Exception sending context initialized event to listener instance of class org.springframework.web.context.ContextLoaderListener
+java.lang.IllegalStateException: Failed to register dubbo://10.2.46.112:28003/com.bjucloud.marketcenter.service.PromotionService?anyhost=true&application=marketcenter-dev&dubbo=2.5.3&interface=com.bjucloud.marketcenter.service.PromotionService&methods=addPromotionFullReduciton,modifyPromotionOnlineState,deletePromotion,getPromotion,editPromotionMarkdown,editPromotionFullReduciton,addPromotionMarkdown,updatePromotion&pid=21394&revision=2.0.14-SNAPSHOT&side=provider&threadpool=fixed&threads=800&timeout=60000&timestamp=1532055915351&version=2.0.0-SNAPSHOT to registry 10.2.45.198:6022, cause: Failed to register dubbo://10.2.46.112:28003/com.bjucloud.marketcenter.service.PromotionService?anyhost=true&application=marketcenter-dev&dubbo=2.5.3&interface=com.bjucloud.marketcenter.service.PromotionService&methods=addPromotionFullReduciton,modifyPromotionOnlineState,deletePromotion,getPromotion,editPromotionMarkdown,editPromotionFullReduciton,addPromotionMarkdown,updatePromotion&pid=21394&revision=2.0.14-SNAPSHOT&side=provider&threadpool=fixed&threads=800&timeout=60000&timestamp=1532055915351&version=2.0.0-SNAPSHOT to zookeeper ESFRegistry://10.2.45.198:6022/com.alibaba.dubbo.registry.RegistryService?application=marketcenter-dev&client=zkclient&dubbo=2.5.3&interface=com.alibaba.dubbo.registry.RegistryService&pid=21394&timestamp=1532055915343, cause: 获取服务注册授权错误 [ serviceName =com.bjucloud.marketcenter.service.PromotionService , version = 2.0.0-SNAPSHOT]
+	at com.alibaba.dubbo.registry.support.FailbackRegistry.register(FailbackRegistry.java:143)
+	at com.alibaba.dubbo.registry.integration.RegistryProtocol.export(RegistryProtocol.java:111)
+	at com.alibaba.dubbo.rpc.protocol.ProtocolFilterWrapper.export(ProtocolFilterWrapper.java:53)
+	at com.alibaba.dubbo.rpc.protocol.ProtocolListenerWrapper.export(ProtocolListenerWrapper.java:54)
+	at com.alibaba.dubbo.rpc.Protocol$Adpative.export(Protocol$Adpative.java)
+	at com.alibaba.dubbo.config.ServiceConfig.doExportUrlsFor1Protocol(ServiceConfig.java:485)
+	at com.alibaba.dubbo.config.ServiceConfig.doExportUrls(ServiceConfig.java:281)
+	at com.alibaba.dubbo.config.ServiceConfig.doExport(ServiceConfig.java:242)
+	at com.alibaba.dubbo.config.ServiceConfig.export(ServiceConfig.java:143)
+	at com.alibaba.dubbo.config.spring.ServiceBean.onApplicationEvent(ServiceBean.java:109)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:166)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:138)
+	at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:383)
+	at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:337)
+	at org.springframework.context.support.AbstractApplicationContext.finishRefresh(AbstractApplicationContext.java:882)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:545)
+	at org.springframework.web.context.ContextLoader.configureAndRefreshWebApplicationContext(ContextLoader.java:444)
+	at org.springframework.web.context.ContextLoader.initWebApplicationContext(ContextLoader.java:326)
+	at org.springframework.web.context.ContextLoaderListener.contextInitialized(ContextLoaderListener.java:107)
+	at org.apache.catalina.core.StandardContext.listenerStart(StandardContext.java:4994)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5492)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:150)
+	at org.apache.catalina.core.ContainerBase.addChildInternal(ContainerBase.java:901)
+	at org.apache.catalina.core.ContainerBase.addChild(ContainerBase.java:877)
+	at org.apache.catalina.core.StandardHost.addChild(StandardHost.java:649)
+	at org.apache.catalina.startup.HostConfig.deployWAR(HostConfig.java:1081)
+	at org.apache.catalina.startup.HostConfig$DeployWar.run(HostConfig.java:1877)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:262)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: com.alibaba.dubbo.rpc.RpcException: Failed to register dubbo://10.2.46.112:28003/com.bjucloud.marketcenter.service.PromotionService?anyhost=true&application=marketcenter-dev&dubbo=2.5.3&interface=com.bjucloud.marketcenter.service.PromotionService&methods=addPromotionFullReduciton,modifyPromotionOnlineState,deletePromotion,getPromotion,editPromotionMarkdown,editPromotionFullReduciton,addPromotionMarkdown,updatePromotion&pid=21394&revision=2.0.14-SNAPSHOT&side=provider&threadpool=fixed&threads=800&timeout=60000&timestamp=1532055915351&version=2.0.0-SNAPSHOT to zookeeper ESFRegistry://10.2.45.198:6022/com.alibaba.dubbo.registry.RegistryService?application=marketcenter-dev&client=zkclient&dubbo=2.5.3&interface=com.alibaba.dubbo.registry.RegistryService&pid=21394&timestamp=1532055915343, cause: 获取服务注册授权错误 [ serviceName =com.bjucloud.marketcenter.service.PromotionService , version = 2.0.0-SNAPSHOT]
+	at cn.eoncloud.esf.registry.ESFRegistry.doRegister(ESFRegistry.java:75)
+	at com.alibaba.dubbo.registry.support.FailbackRegistry.register(FailbackRegistry.java:130)
+	... 31 more
+Caused by: java.lang.RuntimeException: 获取服务注册授权错误 [ serviceName =com.bjucloud.marketcenter.service.PromotionService , version = 2.0.0-SNAPSHOT]
+	at cn.eoncloud.esf.client.ESFRegistryClient.create(ESFRegistryClient.java:124)
+	at cn.eoncloud.esf.registry.ESFRegistry.doRegister(ESFRegistry.java:73)
+	... 32 more
+
+Jul 20, 2018 11:05:15 AM org.apache.catalina.core.ApplicationContext log
+INFO: Closing Spring root WebApplicationContext
+Jul 20, 2018 11:20:31 AM org.apache.catalina.core.ApplicationContext log
+INFO: No Spring WebApplicationInitializer types detected on classpath
+Jul 20, 2018 11:20:31 AM org.apache.catalina.core.ApplicationContext log
+INFO: Initializing Spring root WebApplicationContext
+Jul 20, 2018 11:20:45 AM org.apache.catalina.core.StandardContext listenerStart
+SEVERE: Exception sending context initialized event to listener instance of class org.springframework.web.context.ContextLoaderListener
+java.lang.IllegalStateException: Failed to register dubbo://10.2.46.112:28003/com.bjucloud.marketcenter.service.PromotionService?anyhost=true&application=marketcenter-dev&dubbo=2.5.3&interface=com.bjucloud.marketcenter.service.PromotionService&methods=addPromotionFullReduciton,modifyPromotionOnlineState,deletePromotion,getPromotion,editPromotionMarkdown,editPromotionFullReduciton,addPromotionMarkdown,updatePromotion&pid=21529&revision=2.0.14-SNAPSHOT&side=provider&threadpool=fixed&threads=800&timeout=60000&timestamp=1532056844989&version=2.0.0-SNAPSHOT to registry 10.2.45.198:6022, cause: Failed to register dubbo://10.2.46.112:28003/com.bjucloud.marketcenter.service.PromotionService?anyhost=true&application=marketcenter-dev&dubbo=2.5.3&interface=com.bjucloud.marketcenter.service.PromotionService&methods=addPromotionFullReduciton,modifyPromotionOnlineState,deletePromotion,getPromotion,editPromotionMarkdown,editPromotionFullReduciton,addPromotionMarkdown,updatePromotion&pid=21529&revision=2.0.14-SNAPSHOT&side=provider&threadpool=fixed&threads=800&timeout=60000&timestamp=1532056844989&version=2.0.0-SNAPSHOT to zookeeper ESFRegistry://10.2.45.198:6022/com.alibaba.dubbo.registry.RegistryService?application=marketcenter-dev&client=zkclient&dubbo=2.5.3&interface=com.alibaba.dubbo.registry.RegistryService&pid=21529&timestamp=1532056844981, cause: 获取服务注册授权错误 [ serviceName =com.bjucloud.marketcenter.service.PromotionService , version = 2.0.0-SNAPSHOT]
+	at com.alibaba.dubbo.registry.support.FailbackRegistry.register(FailbackRegistry.java:143)
+	at com.alibaba.dubbo.registry.integration.RegistryProtocol.export(RegistryProtocol.java:111)
+	at com.alibaba.dubbo.rpc.protocol.ProtocolFilterWrapper.export(ProtocolFilterWrapper.java:53)
+	at com.alibaba.dubbo.rpc.protocol.ProtocolListenerWrapper.export(ProtocolListenerWrapper.java:54)
+	at com.alibaba.dubbo.rpc.Protocol$Adpative.export(Protocol$Adpative.java)
+	at com.alibaba.dubbo.config.ServiceConfig.doExportUrlsFor1Protocol(ServiceConfig.java:485)
+	at com.alibaba.dubbo.config.ServiceConfig.doExportUrls(ServiceConfig.java:281)
+	at com.alibaba.dubbo.config.ServiceConfig.doExport(ServiceConfig.java:242)
+	at com.alibaba.dubbo.config.ServiceConfig.export(ServiceConfig.java:143)
+	at com.alibaba.dubbo.config.spring.ServiceBean.onApplicationEvent(ServiceBean.java:109)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:166)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:138)
+	at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:383)
+	at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:337)
+	at org.springframework.context.support.AbstractApplicationContext.finishRefresh(AbstractApplicationContext.java:882)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:545)
+	at org.springframework.web.context.ContextLoader.configureAndRefreshWebApplicationContext(ContextLoader.java:444)
+	at org.springframework.web.context.ContextLoader.initWebApplicationContext(ContextLoader.java:326)
+	at org.springframework.web.context.ContextLoaderListener.contextInitialized(ContextLoaderListener.java:107)
+	at org.apache.catalina.core.StandardContext.listenerStart(StandardContext.java:4994)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5492)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:150)
+	at org.apache.catalina.core.ContainerBase.addChildInternal(ContainerBase.java:901)
+	at org.apache.catalina.core.ContainerBase.addChild(ContainerBase.java:877)
+	at org.apache.catalina.core.StandardHost.addChild(StandardHost.java:649)
+	at org.apache.catalina.startup.HostConfig.deployWAR(HostConfig.java:1081)
+	at org.apache.catalina.startup.HostConfig$DeployWar.run(HostConfig.java:1877)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:262)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: com.alibaba.dubbo.rpc.RpcException: Failed to register dubbo://10.2.46.112:28003/com.bjucloud.marketcenter.service.PromotionService?anyhost=true&application=marketcenter-dev&dubbo=2.5.3&interface=com.bjucloud.marketcenter.service.PromotionService&methods=addPromotionFullReduciton,modifyPromotionOnlineState,deletePromotion,getPromotion,editPromotionMarkdown,editPromotionFullReduciton,addPromotionMarkdown,updatePromotion&pid=21529&revision=2.0.14-SNAPSHOT&side=provider&threadpool=fixed&threads=800&timeout=60000&timestamp=1532056844989&version=2.0.0-SNAPSHOT to zookeeper ESFRegistry://10.2.45.198:6022/com.alibaba.dubbo.registry.RegistryService?application=marketcenter-dev&client=zkclient&dubbo=2.5.3&interface=com.alibaba.dubbo.registry.RegistryService&pid=21529&timestamp=1532056844981, cause: 获取服务注册授权错误 [ serviceName =com.bjucloud.marketcenter.service.PromotionService , version = 2.0.0-SNAPSHOT]
+	at cn.eoncloud.esf.registry.ESFRegistry.doRegister(ESFRegistry.java:75)
+	at com.alibaba.dubbo.registry.support.FailbackRegistry.register(FailbackRegistry.java:130)
+	... 31 more
+Caused by: java.lang.RuntimeException: 获取服务注册授权错误 [ serviceName =com.bjucloud.marketcenter.service.PromotionService , version = 2.0.0-SNAPSHOT]
+	at cn.eoncloud.esf.client.ESFRegistryClient.create(ESFRegistryClient.java:124)
+	at cn.eoncloud.esf.registry.ESFRegistry.doRegister(ESFRegistry.java:73)
+	... 32 more
+
+Jul 20, 2018 11:20:45 AM org.apache.catalina.core.ApplicationContext log
+INFO: Closing Spring root WebApplicationContext
+Jul 20, 2018 11:23:41 AM org.apache.catalina.core.ApplicationContext log
+INFO: No Spring WebApplicationInitializer types detected on classpath
+Jul 20, 2018 11:23:41 AM org.apache.catalina.core.ApplicationContext log
+INFO: Initializing Spring root WebApplicationContext
+Jul 23, 2018 11:45:03 AM org.apache.catalina.core.ApplicationContext log
+INFO: No Spring WebApplicationInitializer types detected on classpath
+Jul 23, 2018 11:45:03 AM org.apache.catalina.core.ApplicationContext log
+INFO: Initializing Spring root WebApplicationContext
+Jul 24, 2018 5:29:18 PM org.apache.catalina.core.ApplicationContext log
+INFO: No Spring WebApplicationInitializer types detected on classpath
+Jul 24, 2018 5:29:18 PM org.apache.catalina.core.ApplicationContext log
+INFO: Initializing Spring root WebApplicationContext
+Jul 26, 2018 6:00:28 PM org.apache.catalina.core.ApplicationContext log
+INFO: No Spring WebApplicationInitializer types detected on classpath
+Jul 26, 2018 6:00:28 PM org.apache.catalina.core.ApplicationContext log
+INFO: Initializing Spring root WebApplicationContext
+Aug 21, 2018 11:35:03 AM org.apache.catalina.core.ApplicationContext log
+INFO: No Spring WebApplicationInitializer types detected on classpath
+Aug 21, 2018 11:35:03 AM org.apache.catalina.core.ApplicationContext log
+INFO: Initializing Spring root WebApplicationContext
