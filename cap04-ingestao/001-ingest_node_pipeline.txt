@@ -3,15 +3,9 @@ PUT _ingest/pipeline/cep
 {
   "description": "Pipeline de tratamento de CEPs", 
   "processors": [{
-    "csv": {
-      "field": "message",
-      "separator": ";",
-      "trim": true,
-      "target_fields": ["cep","cidade_uf","bairro","logradouro","complemento"]
-    },
     "dissect": {
-      "field": "cidade_uf",
-      "pattern": "%{cidade}/%{uf}"
+      "field": "message",
+      "pattern": "%{cep};%{cidade_uf};%{bairro};%{logradouro};%{complemento}"
     },
     "set": {
         "field": "processamento",
@@ -108,11 +102,9 @@ PUT _ingest/pipeline/idh
 {
   "description": "Pipeline de tratamento de IDH municipio", 
   "processors": [{
-    "csv": {
+    "dissect": {
       "field": "message",
-      "separator": ";",
-      "trim": true,
-      "target_fields": ["cod_ibge","municipio","idh_municipio","idh_educacao","idh_longevidade","idh_renda"]
+      "pattern": "%{cod_ibge};%{municipio};%{idh_municipio};%{idh_educacao};%{idh_longevidade};%{idh_renda}"
     },
     "remove": {
       "field": ["message"]
@@ -216,6 +208,7 @@ POST _ingest/pipeline/processa_dados/_simulate
 
 
 # Criando o inice lookup
+DELETE idh
 PUT idh
 {
   "settings": {
@@ -254,15 +247,9 @@ PUT _ingest/pipeline/cep
 {
   "description": "Pipeline de tratamento de CEPs", 
   "processors": [{
-    "csv": {
-      "field": "message",
-      "separator": ";",
-      "trim": true,
-      "target_fields": ["cep","cidade_uf","bairro","logradouro","complemento","cod_ibge"]
-    },
     "dissect": {
-      "field": "cidade_uf",
-      "pattern": "%{cidade}/%{uf}"
+      "field": "message",
+      "pattern": "%{cep};%{cidade_uf};%{bairro};%{logradouro};%{complemento};%{cod_ibge}"
     },
     "set": {
         "field": "processamento",
