@@ -1,0 +1,52 @@
+Passo 1 - Configurando Pipeline Main do Logstash 
+
+OBS: Crie um Maquina virtual com disco de 20GB e memoria com 2GB, instale o CENTOS7 para receber o Logstash e após instalado o sistema operacional siga os passos abaixo:
+
+mkdir /opt/elastic
+cd /opt/elastic 
+wget https://artifacts.elastic.co/downloads/logstash/logstash-7.5.1.tar.gz
+tar zxfv logstash-7.5.1.tar.gz
+
+
+Passo 2 - Instalando o Java e Ruby  
+yum install java-1.8.0-openjdk.x86_64 ruby.x86_64 
+
+Passo 3 - Faça o download dos datasets na maquina do Logstash: 
+
+cd /opt/elastic
+wget https://github.com/tornis/esstackenterprise/raw/master/cap04-ingestao/mail.tar.gz
+wget https://github.com/tornis/esstackenterprise/raw/master/cap04-ingestao/apache.tar.gz
+
+tar zxfv mail.tar.gz
+tar zxfv apache.tar.gz
+
+
+Passo 4 - Criando a Keystore no Logstash 
+
+cd /etc/elastic/logstash-7.5.1 
+set +o history
+export LOGSTASH_KEYSTORE_PASS=123456
+set -o history
+./bin/logstash-keystore create
+./bin/logstash-keystore add espwd
+
+Passo 4 - Configurando logstash.yml e a jvm.options
+No logstash.yml ajuste apenas os seguintes parâmetros
+
+vi /opt/elastic/logstash-7.5.1/conf/logstash.yml
+node.name: logstash
+config.reload.automatic: true
+config.reload.interval: 3s
+
+No jvm.options defina a Heap para 1G
+vi /opt/elastic/logstash-7.5.1/conf/jvm.options
+-Xms1g
+-Xmx1g
+
+
+Passo 5 - Configurando o meupipeline.conf
+Copie o arquivo do GIT capítulo 04 - meupipeline.conf com o seguinte comando
+
+
+
+
