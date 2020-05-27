@@ -33,20 +33,43 @@ set -o history
 Passo 4 - Configurando logstash.yml e a jvm.options
 No logstash.yml ajuste apenas os seguintes parâmetros
 
-vi /opt/elastic/logstash-7.5.1/conf/logstash.yml
+vi /opt/elastic/logstash-7.5.1/config/logstash.yml
 node.name: logstash
 config.reload.automatic: true
 config.reload.interval: 3s
 
 No jvm.options defina a Heap para 1G
-vi /opt/elastic/logstash-7.5.1/conf/jvm.options
+vi /opt/elastic/logstash-7.5.1/config/jvm.options
 -Xms1g
 -Xmx1g
 
-
 Passo 5 - Configurando o meupipeline.conf
-Copie o arquivo do GIT capítulo 04 - meupipeline.conf com o seguinte comando
+Copie o arquivo do GIT capítulo 04 - meupipeline.conf com o seguinte comando:
 
+cd /opt/elastic/logstash-7.5.1/config
+wget https://raw.githubusercontent.com/tornis/esstackenterprise/master/cap04-ingestao/meupipeline.conf
 
+Passo 6 - Instalando as dependencias para o script ruby no Logsatsh
 
+cd /opt/elastic/logstash-7.5.1
+./bin/ruby -S gem install whois
+echo 'gem "whois"' >> Gemfile
+
+Passo 7 - Copiando o certificado da CA do Elasticsearch Master para o Logsash e convertendo para formato PEM
+
+cd /opt/elastic/logstash-7.5.1/config 
+scp root@10.10.10.10:/opt/elastic/elasticsearch-7.5.1/conf/certs/ca.p12 . 
+openssl pkcs12 -in ca.p12 -out ca.pem -clcerts -nokeys
+
+Passo 8 - Criando o diretorio do grok customizado e copiando o grok do Postfix
+
+mkdir /opt/elastic/logstash-7.5.1/config/patterns
+cd /opt/elastic/logstash-7.5.1/config/patterns 
+wget https://raw.githubusercontent.com/tornis/esstackenterprise/master/cap04-ingestao/postfix.grok
+
+Passo 9 - Testando a configuração
+./bin/logstash -t -f config/meupipeline.conf
+
+Passo 10 - Iniciando o Logstash 
+./bin/logstash -f config/meupipeline.conf
 
