@@ -1,0 +1,19 @@
+# Funções e comandos do Timelion 
+
+.es(index=kibana_sample_data_logs).lines(width=2).color(color=red).label(label="Total de Acessos"),
+.es(index=kibana_sample_data_logs,offset=-1d).lines(fill=1,width=1,steps=1).color(color=orange).label(label="Acessos Dias anteriores")
+
+.es(index=kibana_sample_data_logs,offset=-1d).bars(width=5).color(color=blue), .es(index=kibana_sample_data_logs).points(fill=1,radius=4,symbol=circle,weight=1).color(color=red).label(label="Total de Acessos")
+
+.es(index=kibana_sample_data_logs,q='geo.src:  "CN"',split=clientip:5)
+
+
+.es(index=kibana_sample_data_logs),  .es(index=kibana_sample_data_logs).trend(mode=log),
+.es(index=kibana_sample_data_logs).derivative().bars(width=2)
+
+.es(index=kibana_sample_data_logs).movingaverage(window=9,position=center),
+.es(index=kibana_sample_data_logs).movingaverage(window=14,position=center),
+
+
+.es(index=kibana_sample_data_logs).bars(stack=false).color(red),
+.min(.es(index=kibana_sample_data_logs), 20).bars(stack=false).color(blue) 

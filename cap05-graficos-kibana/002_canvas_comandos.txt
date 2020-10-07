@@ -1,0 +1,31 @@
+# Canvas 
+
+# Calculo de porcentagem no Canvas 
+filters
+| essql 
+  query="SELECT count(*) as total FROM \"kibana_sample_data_logs\" where response between 200 and 299"
+| math 
+  {string "total/" {filters | essql query="SELECT count(*) as sucesso FROM \"kibana_sample_data_logs\"" | math "sucesso"}}
+| formatnumber "0%" format="0,0%"
+| metric "Eventos" 
+  metricFont={font size=48 family="'Open Sans', Helvetica, Arial, sans-serif" color="#000000" align="center" lHeight=48} 
+  labelFont={font size=14 family="'Open Sans', Helvetica, Arial, sans-serif" color="#000000" align="center"}
+| render
+
+
+# Group by por Site/Host
+SELECT count(*) as total, host FROM "kibana_sample_data_logs"
+group by host
+order by total desc
+limit 10
+
+# Group by por data e evento
+
+SELECT timestamp, count(*) as evento FROM "kibana_sample_data_logs" where response between 200 and 299
+group by timestamp
+
+# TOP 10 países com mais acesso 
+SELECT geo.src, count(*) as total FROM "kibana_sample_data_logs" where response between 200 and 299
+group by geo.src
+order by total desc
+limit 10
