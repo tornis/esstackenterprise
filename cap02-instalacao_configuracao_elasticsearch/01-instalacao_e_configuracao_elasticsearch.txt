@@ -3,10 +3,10 @@ useradd -d /opt/elastic -m elastic
 
 # Passo 2 - Descompactar o Elasticsearch e Kibana
 cd /elasticstack
-tar zxfv elasticsearch-7.5.1-linux-x86_64.tar.gz
-tar zxfv kibana-7.5.1-linux-x86_64.tar.gz
-mv elasticsearch-7.5.1 /opt/elastic/
-mv kibana-7.5.1-linux-x86_64 /opt/elastic/
+tar zxfv elasticsearch-7.9.2-linux-x86_64.tar.gz
+tar zxfv kibana-7.9.2-linux-x86_64.tar.gz
+mv elasticsearch-7.9.2 /opt/elastic/
+mv kibana-7.9.2-linux-x86_64 /opt/elastic/
 mkdir -p /elasticstack/es/data
 mkdir -p /elasticstack/es/logs
 chown elastic.elastic /opt/elastic /elasticstack/es -R 
@@ -41,19 +41,19 @@ tcp        0      0 127.0.0.1:25            0.0.0.0:*               OUÇA       
 
 # Passo 6 - Habilitando regras de firewall para comunicação entre os nós e os clientes com o Cluster Elastic
 firewall-cmd --permanent --add-port=9200/tcp
-firewall-cmd --permanent --add-port=9200/tcp
+firewall-cmd --permanent --add-port=9300/tcp
 firewall-cmd --permanent --add-port=5601/tcp
 firewall-cmd --reload
 
 # Passo 7 - Configurando a JVM ajuste para 1GB
 
-vi /opt/elastic/elasticsearch-7.5.1/conf/jvm.options
+vi /opt/elastic/elasticsearch-7.9.2/config/jvm.options
 
 -Xms1g
 -Xmx1g
 
 # Passo 8 - Configuando o Elasticsearch 
-vi /opt/elastic/elasticsearch-7.6.0/conf/elasticsaerch.yml
+vi /opt/elastic/elasticsearch-7.9.2/config/elasticsaerch.yml
 
 cluster.name: meu_cluster
 node.name: master
@@ -70,7 +70,7 @@ node.attr.type: hot
 
 su - elastic
 
-cd /opt/elastic/elasticsearch-7.5.1
+cd /opt/elastic/elasticsearch-7.9.2
 ./bin/elasticsearch --help 
 
 OpenJDK 64-Bit Server VM warning: Option UseConcMarkSweepGC was deprecated in version 9.0 and will likely be removed in a future release.
@@ -92,7 +92,7 @@ Option                Description
 
 # Passo 10 - Analisando os logs do Elasticsearch 
 
-tail -f /opt/elastic/elasticsearch-7.6.0/logs/tornis.log 
+tail -f /elasticstack/es/logs/meu_cluster.log 
 
 [2020-02-25T11:08:04,544][INFO ][o.e.n.Node               ] [master] starting ...
 [2020-02-25T11:08:04,729][INFO ][o.e.t.TransportService   ] [master] publish_address {10.10.10.100:9300}, bound_addresses {0.0.0.0:9300}
@@ -107,9 +107,9 @@ tail -f /opt/elastic/elasticsearch-7.6.0/logs/tornis.log
 [2020-02-25T11:08:05,660][INFO ][o.e.g.GatewayService     ] [master] recovered [0] indices into cluster_state
 
 # Passo 11 - Parando o Elastisearch 
-cat /opt/elastic/elasticsearch-7.5.1/pid | xargs kill -SIGTERM
+cat /opt/elastic/elasticsearch-7.9.2/pid | xargs kill -SIGTERM
 ou
-pkill -F /opt/elastic/elasticsearch-7.5.1/pid
+pkill -F /opt/elastic/elasticsearch-7.9.2/pid
 
 # Passo 12 - Configuração dos data nodes (Data Node 1)
 
@@ -123,7 +123,7 @@ hostname: esdata2.tornis.com.br
 Habilitar regras de firewall as regras de firewall descritas no "passo 6"
 
 # Passo 13 - Configurar o Elasticsearch como data-node 
-vi /opt/elastic/elasticsearch-7.5.1/conf/elasticsaerch.yml
+vi /opt/elastic/elasticsearch-7.9.2/conf/elasticsaerch.yml
 
 cluster.name: meu_cluster
 node.name: data1
@@ -144,7 +144,7 @@ rm -fr /elasticstack/es/logs*
 # Passo 15 - Iniciar o Elasticsearch do data-node
 
 su - elastic
-cd /opt/elastic/elasticsearch-7.6.0
+cd /opt/elastic/elasticsearch-7.9.2
 ./bin/elasticsearch -d -p pid
 
 # Passo 16 - Verificando se o data node foi adicionado ao cluster
@@ -168,7 +168,7 @@ hostname: esdata2.tornis.com.br
 Habilitar regras de firewall as regras de firewall descritas no "passo 6"
 
 # Passo 16 - Configurar o Elasticsearch como data-node 
-vi /opt/elastic/elasticsearch-7.5.1/conf/elasticsaerch.yml
+vi /opt/elastic/elasticsearch-7.9.2/conf/elasticsaerch.yml
 
 cluster.name: meu_cluster
 node.name: data2
@@ -190,7 +190,7 @@ rm -fr /elasticstack/es/logs*
 # Passo 16 - Iniciar o Elasticsearch do data-node
 
 su - elastic
-cd /opt/elastic/elasticsearch-7.6.0
+cd /opt/elastic/elasticsearch-7.9.2
 ./bin/elasticsearch -d -p pid
 
 # Passo 17 - Verificando se o data node foi adicionado ao cluster
