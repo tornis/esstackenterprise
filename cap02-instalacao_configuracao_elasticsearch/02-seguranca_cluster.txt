@@ -1,8 +1,12 @@
 # Passo 1 - Gerando o CA
-./bin/elasticsearch-certutil ca --out /opt/elastic/elasticsearch-7.9.2/config/certs/ca.p12 --pass elasticstack
+su - elastic 
+
+mkdir /opt/elastic/elasticsearch-7.9.2/config/certs
+
+./bin/elasticsearch-certutil ca --out /opt/elastic/elasticsearch-7.9.2/config/certs/ca.p12 --pass 123456
 
 # Passo 2 - Gerando os certificados dos nodes(gerar para cada node do cluster)
-./bin/elasticsearch-certutil cert --ca /opt/elastic/elasticsearch-7.9.2/config/certs/ca.p12 --ca-pass elasticstack --name node-all --out /opt/elastic/certs/master-1.p12 --pass elasticstack
+./bin/elasticsearch-certutil cert --ca /opt/elastic/elasticsearch-7.9.2/config/certs/ca.p12 --ca-pass 123456 --ip <SEU_IP> --out /opt/elastic/certs/master-1.p12 --pass 123456
 
 # Passo 3 - Adicionar a senha do certificado no keystore (adicionar para cada node do cluster)
 
