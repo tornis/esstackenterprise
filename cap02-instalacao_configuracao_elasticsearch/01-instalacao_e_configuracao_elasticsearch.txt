@@ -53,7 +53,7 @@ vi /opt/elastic/elasticsearch-7.9.2/config/jvm.options
 -Xmx1g
 
 # Passo 8 - Configuando o Elasticsearch 
-vi /opt/elastic/elasticsearch-7.9.2/config/elasticsaerch.yml
+vi /opt/elastic/elasticsearch-7.9.2/config/elasticsearch.yml
 
 cluster.name: meu_cluster
 node.name: master
@@ -123,7 +123,7 @@ hostname: esdata2.tornis.com.br
 Habilitar regras de firewall as regras de firewall descritas no "passo 6"
 
 # Passo 13 - Configurar o Elasticsearch como data-node 
-vi /opt/elastic/elasticsearch-7.9.2/conf/elasticsaerch.yml
+vi /opt/elastic/elasticsearch-7.9.2/config/elasticsearch.yml
 
 cluster.name: meu_cluster
 node.name: data1
