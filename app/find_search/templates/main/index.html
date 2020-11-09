@@ -1,0 +1,43 @@
+{% extends 'main/base.html' %}
+{% block content %}
+<div class="py-5 text-center">
+        <img class="d-block mx-auto mb-4" src="https://tornis.lmsestudio.com/storage/template/Ol6BJgFht986mQEhAaUy5de954583886c.png" alt="" width="400px" height="105px">
+        <h2>Aplicação Exemplo para Elastic APM</h2>
+        <p class="lead">Digite uma marca de produto, exemplo: blue, red, larger ou frozen</p>
+        <div class="mx-auto">
+            <div class="row justify-content-md-center col-12">
+                <form action="{% url 'search' %}"  method="post" class="form-inline">
+                {% csrf_token %}
+                <div class="form-group mb-4">
+                    <input type="text" class="form-control form-control-lg" placeholder="Digite o termo" name="busca_termo">
+                </div>
+                <div class="form-group mb-4">
+                     <button type="submit" name="Buscar" class="btn form-control-lg btn-warning">Buscar</button>
+                </div>
+                </form>
+            </div>
+            <div class="row justify-content-md-center col-md-12">
+                <div class="col-md-6">
+                        <table class="table table-striped table-md">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Marca</th>
+                          <th>Produto</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      {% for p in PRODUTOS %}
+                        <tr>
+                          <td>{{ p.product_id }}</td>
+                          <td>{{ p.brand_name }}</td>
+                          <td>{{ p.product_name }}</td>
+                        </tr>
+                      {% endfor %}
+                      </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+</div>
+{% endblock %}

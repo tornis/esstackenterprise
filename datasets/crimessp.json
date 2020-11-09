@@ -120,6 +120,9 @@
         },
         "valor_prejuizo": {
           "type": "double"
+        },
+        "location": {
+          "type": "geo_point"
         }
       }
     }
