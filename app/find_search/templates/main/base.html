@@ -22,11 +22,8 @@
     <script src="{% static '/elastic-apm-rum.umd.min.js' %}" crossorigin></script>
     <script>
       elasticApm.init({
-          serviceName: "frontend-django",
-          serverUrl: "https://f818d7b8455f4479ba69026aade66014.apm.eastus2.azure.elastic-cloud.com:443"
-          pageLoadTraceId: "{{ apm.trace_id }}",
-          pageLoadSpanId: "{{ apm.span_id }}",
-          pageLoadSampled: {{ apm.is_sampled_js }}
+          serviceName: "application-django",
+          serverUrl: "http://localhost:8200"
       })
     </script>
   </body>

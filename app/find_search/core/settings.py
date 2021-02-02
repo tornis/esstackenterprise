@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main',
-    #'elasticapm.contrib.django',
+    'elasticapm.contrib.django',
 ]
 
 MIDDLEWARE = [
@@ -62,7 +62,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-     #'elasticapm.contrib.django.middleware.TracingMiddleware',
+    'elasticapm.contrib.django.middleware.TracingMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -164,8 +164,10 @@ BOOTSTRAP4 = {
     "include_jquery": True,
 }
 
-#ELASTIC_APM = {
-#    'SERVICE_NAME': 'APP-TESTE',
-#    'DEBUG': True,
-#    'SERVER_URL': 'http://localhost:8200' 
-#}
+ELASTIC_APM = {
+    'SERVICE_NAME': 'application-django',
+    'DEBUG': True,
+    'API_KEY': 'S0d1c3ozWUJfSzVuaDk5cURSb1c6bWJDcVN1WWxUakdicFMzTi04eW5rQQ==',
+    'SECRET_TOKEN': 'token_teste',
+    'SERVER_URL': 'https://e1a05aee302f4ef3ba46379f48554346.apm.eastus2.azure.elastic-cloud.com' 
+}
