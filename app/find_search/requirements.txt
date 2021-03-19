@@ -8,7 +8,7 @@ colorama==0.4.3
 contextlib2==0.6.0
 distlib==0.3.0
 distro==1.4.0
-Django==2.2.0
+Django==2.2.18
 django-bootstrap4==1.1.1
 django-environ==0.4.5
 elastic-apm==5.8.1
