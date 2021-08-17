@@ -1,5 +1,19 @@
-CREATE TABLE "product" ("product_class_id" integer NOT NULL, "product_id" integer NOT NULL PRIMARY KEY, "brand_name" varchar(60) NULL, "product_name" varchar(60) NOT NULL, "SKU" bigint NOT NULL, "SRP" decimal NULL, "gross_weight" real NULL, "net_weight" real NULL, "recyclable_package" bool NULL, "low_fat" bool NULL, "units_per_case" smallint NULL, "cases_per_pallet" smallint NULL, "shelf_width" real NULL, "shelf_height" real NULL, "shelf_depth" real NULL);
-
+CREATE TABLE product (
+	product_class_id integer NOT NULL, 
+	product_id integer NOT NULL PRIMARY KEY, 
+	brand_name varchar(60) NULL, 
+	product_name varchar(60) NOT NULL, 
+	SKU bigint NOT NULL, 
+	SRP decimal NULL, 
+	gross_weight real NULL, 
+	net_weight real NULL, 
+	recyclable_package bool NULL, 
+	low_fat bool NULL, units_per_case smallint NULL, 
+	cases_per_pallet smallint NULL, 
+	shelf_width real NULL, 
+	shelf_height real NULL, 
+	shelf_depth real NULL
+);
 INSERT INTO product (product_class_id,product_id,brand_name,product_name,SKU,SRP,gross_weight,net_weight,recyclable_package,low_fat,units_per_case,cases_per_pallet,shelf_width,shelf_height,shelf_depth) VALUES
 	 (30,1,'Washington','Washington Berry Juice',90748583674,2.85,8.39000034,6.38999987,0,0,30,14,16.89999962,12.60000038,7.4000001),
 	 (52,2,'Washington','Washington Mango Drink',96516502499,0.74,7.42000008,4.42000008,0,1,18,8,13.39999962,3.71000004,22.60000038),
